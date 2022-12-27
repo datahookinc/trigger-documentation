@@ -1,0 +1,104 @@
+import App from '../example/app';
+
+# Example
+
+In this example, we will build a TODO app to highlight some of the core features of **Trigger**. The final product is shown below.
+
+<App />
+
+### Create types for our store
+
+First, we import then generic types from the library and then define the types we will use in our application. These types will provide many conveniences when interacting with your store throughout your application.
+Starting by creating a file for your store (e.g., `store.ts`) and adding the following types:
+
+<span style={{ fontFamily: 'monospace'}}>store.ts</span>
+```
+import { type Store, type Table } from '@datahook/trigger';
+
+type Owner = {
+    _pk: number;
+    ownerID: number;
+    firstName: string;
+    lastName: string;
+}
+
+type Item = {
+    _pk: number;
+    ownerID: Owner["ownerID"];
+    description: string;
+};
+
+interface MyStore extends Store {
+    tables: {
+        owners: Table<Owner>;
+        activeItems: Table<Item>;
+        completedItems: Table<Item>;
+    };
+}
+```
+<div>
+    <span style={{ backgroundColor: 'lightyellow' }}>**Note:** You can name your store file whatever you like, and you can have as many stores as you want to provide better localization</span>
+</div>
+
+### Instantiate our store
+
+With our types declared, we now instantitate our store and export it for use throughout our application. You can do this in the same file where you declared your types. Start by importing the `CreateTable` and `extract`
+convenience functions from the library, then creating a property called `tables` in your store object with empty arrays to hold your data.
+
+<span style={{ fontFamily: 'monospace'}}>store.ts</span>
+```
+import { extract, CreateTable } from '@datahook/trigger';
+
+const s: MyStore = {
+    tables: {
+        owners: CreateTable<Owner>({ _pk: [], ownerID: [], firstName: [], lastName: [], }),
+        activeItems: CreateTable<Item>({ _pk: [], ownerID: [], description: [], }),
+        deletedItems: CreateTable<Item>({ _pk: [], ownerID: [], description: [], }),
+    },
+};
+
+/*** EXTRACT AND EXPORT OUR STORE */
+export const { tables } = extract(s);
+```
+
+The final version of our store is shown below, and is now ready for use in our application.
+
+<span style={{ fontFamily: 'monospace'}}>store.ts</span>
+
+```
+import { extract, CreateTable, type Store, type Table } from '@datahook/trigger';
+
+type Owner = {
+    _pk: number;
+    ownerID: number;
+    firstName: string;
+    lastName: string;
+}
+
+type Item = {
+    _pk: number;
+    ownerID: Owner["ownerID"];
+    description: string;
+};
+
+interface MyStore extends Store {
+    tables: {
+        owners: Table<Owner>;
+        activeItems: Table<Item>;
+        completedItems: Table<Item>;
+        deletedItems: Table<Item>;
+    };
+}
+
+const s: MyStore = {
+    tables: {
+        owners: CreateTable<Owner>({ _pk: [], ownerID: [], firstName: [], lastName: [], }),
+        activeItems: CreateTable<Item>({ _pk: [], ownerID: [], description: [], }),
+        completedItems: CreateTable<Item>({ _pk: [], ownerID: [], description: [], }),
+        deletedItems: CreateTable<Item>({ _pk: [], ownerID: [], description: [], }),
+    },
+};
+
+/*** EXTRACT AND EXPORT OUR STORE */
+export const { tables } = extract(s);
+```

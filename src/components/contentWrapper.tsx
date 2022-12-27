@@ -8,9 +8,11 @@ const StyledContentWrapper = styled.section`
     position: relative;
     box-sizing: border-box;
     background-color: white;
+    overflow: auto;
     
     .inner {
         padding-left: 20px;
+        padding-right: 20px;
         display: flex;
         flex-direction: column;
         height: 100%;
@@ -38,7 +40,7 @@ const StyledContentWrapper = styled.section`
         padding: 10px;
         margin-right: 20px;
         tab-size: 4;
-        overflow-y: auto;
+        overflow-x: auto;
     }
 
 `;
