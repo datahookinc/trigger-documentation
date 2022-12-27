@@ -1,7 +1,16 @@
-import React from 'react'
+import React from 'react';
+import { Navigation } from '../components/navigation';
+import { ContentWrapper } from '../components/contentWrapper';
+import Layout from '../components/layout';
+import MDX from '../content/installation.mdx';
 
-function Installation() {
+export default function Installation() {
     return (
-        <div>Installation page</div>
+        <Layout pageTitle="Installation">
+            <Navigation />
+            <ContentWrapper>
+                <MDX />
+            </ContentWrapper>
+        </Layout>
     )
 }

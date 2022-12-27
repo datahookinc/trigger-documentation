@@ -2,7 +2,7 @@ import type { GatsbyConfig } from "gatsby";
 
 const config: GatsbyConfig = {
 	siteMetadata: {
-		title: `Trigger TODO App`,
+		title: `Trigger Documentation`,
 		siteUrl: `https://www.trigger.datahook.ca`,
 	},
 	// More easily incorporate content into your pages through automatic TypeScript type generation and better GraphQL IntelliSense.
@@ -22,14 +22,6 @@ const config: GatsbyConfig = {
 			},
 			__key: "pages"
 		},
-		// {
-		// 	resolve: "gatsby-source-filesystem",
-		// 	options: {
-		// 		name: "tour",
-		// 		path: `${__dirname}/tour`,
-		// 	},
-		// 	__key: "tour",
-		// },
 		{
 			resolve: "gatsby-source-filesystem",
 			options: {

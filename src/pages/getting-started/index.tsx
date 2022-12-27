@@ -2,15 +2,14 @@ import React from 'react';
 import { Navigation } from '../../components/navigation';
 import { ContentWrapper } from '../../components/contentWrapper';
 import Layout from '../../components/layout';
-import MyMdx from '../../content/getting-started.mdx';
+import MDX from '../../content/getting-started/getting-started.mdx';
 
 export default function GettingStarted() {
     return (
-        <Layout pageTitle="getting-started">
+        <Layout pageTitle="Getting Started">
             <Navigation />
             <ContentWrapper>
-                Getting Started
-                <MyMdx />
+                <MDX />
             </ContentWrapper>
         </Layout>
     )
