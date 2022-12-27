@@ -1,0 +1,51 @@
+---
+title: "Getting Started"
+slug: "getting-started"
+---
+
+import { InstructionsWrapper } from './instructions.tsx';
+import { Navigation } from '../src/components/navigation';
+import Button from '@mui/material/Button';
+
+
+<Navigation />
+
+<InstructionsWrapper>
+	<div className="instructions-main">
+		# WELCOME TO HOOKSCRIPT! <span style={{ textShadow: "1px 1px var(--dark-purple)"}}><img style={{ width: "32px", height: "32px", position: "relative", top: "2px" }} src="/hook.svg" /></span>
+
+		HookScript is a programming language designed to make data more accessible and easier to share. You can use HookScript to connect
+		to data sources, perform transformations, and produce an output dataset that you can share with others.
+
+		### KEY CONCEPTS
+
+		- HookScript is an interpreted language, with static typing
+		- For this tour, HookScript was compiled to WebAssembly (WASM) so it will run entirely in your browser (no downloads, no server calls)
+		- In HookScript you declare **operators** and **streams** for manipulating data
+		- Data is streamed through your operators one row at a time (similar to a big for-each loop)
+		- Many keywords in the language (e.g., GRAPH, CONFIG, STATE, etc.) are case sensitive and must be uppercase
+		- Semicolons are optional when ending a statement or expression
+		- The language is in active development, so it is missing some core language features (loops anyone!)
+
+		### WHERE TO USE THE LANGUAGE
+
+		The language forms the backbone of a data engine currently under development that makes it easier to connect to data, transform it, and share it with others. The language will be open sourced when it is more stable.
+		
+
+		### ACTIVE DEVELOPMENT AND DISCOVERY
+		
+		Any feedback is greatly appreciated and issues can be submitted to the <a href="https://github.com/datahookinc/hookscript-tour" target="_blank">GitHub repository</a> or emailed to <a href="mailto:info@datahook.ca">info@datahook.ca</a>
+		
+		The following feedback is appreciated:
+
+		- How to make the language easier to work with for people who are new to programming (e.g., how to simplify the syntax, how to make some concepts easier to understand, etc.)
+		- How to make the language easier to work with for people who want to create and share datasets with others (e.g., syntactic sugar, convenience functions, etc.)
+		- What **operators** need to be developed (e.g., a filter operator, a join operator, etc.)
+		- Any bugs/issues you encounter when working with the language during this tour
+
+		<br />
+		<br />
+		# READY TO GET HOOKED?
+	</div>
+
+</InstructionsWrapper>

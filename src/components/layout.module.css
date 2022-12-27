@@ -1,0 +1,8 @@
+.container {
+    display: flex;
+    box-sizing: border-box;
+}
+
+.active-page {
+    color: var(--purple);
+}
