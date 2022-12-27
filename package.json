@@ -1,8 +1,8 @@
 {
-  "name": "trigger-todo-app",
+  "name": "trigger-documentation",
   "version": "1.0.0",
   "private": true,
-  "description": "trigger-todo-app",
+  "description": "Documentation for Trigger statement management module",
   "author": "Josh-Weston",
   "keywords": [
     "gatsby"

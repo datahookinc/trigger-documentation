@@ -7,6 +7,7 @@ const StyledContentWrapper = styled.section`
     color: var(--dark-purple);
     position: relative;
     box-sizing: border-box;
+    background-color: white;
     
     .inner {
         padding-left: 20px;

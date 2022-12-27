@@ -37,7 +37,7 @@ export function Navigation() {
             <h1>TRIGGER</h1>
             <nav>
                 <ul>
-                    <li><Link to="/overview">Overview</Link></li>
+                    <li><Link to="/">Overview</Link></li>
                     <li><Link to="/installation">Installation</Link></li>
                     <li>
                         <Link to="/getting-started">Getting Started</Link>

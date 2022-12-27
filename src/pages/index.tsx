@@ -1,12 +1,16 @@
-import { navigate } from 'gatsby';
-import React, { useLayoutEffect } from 'react';
-import SEO from '../components/seo';
+import React from 'react';
+import { Navigation } from '../components/navigation';
+import { ContentWrapper } from '../components/contentWrapper';
+import Layout from '../components/layout';
+import MDX from '../content/overview.mdx';
 
-export default function IndexPage() {
-  useLayoutEffect(() => {
-    navigate('/getting-started')
-  }, []);
-  return
+export default function Overview() {
+    return (
+        <Layout pageTitle="Overview">
+            <Navigation />
+            <ContentWrapper>
+                <MDX />
+            </ContentWrapper>
+        </Layout>
+    )
 }
-
-export const Head = () => <SEO title="Overview" />
