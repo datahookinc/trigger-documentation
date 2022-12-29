@@ -1,3 +1,5 @@
+import { codeWrapper } from '../../example/example.module.css';
+
 # Getting Started
 
 ### Add Trigger to your project
@@ -6,7 +8,62 @@
 npm i @datahook/trigger
 ```
 
-### Create a store
+### Create a store as a regular .ts file
 
+<span style={{ fontFamily: 'monospace'}}>store.ts</span>
+
+<div className={codeWrapper}>
+```
+import { extract, CreateTable, type Store, type Table } from '@datahook/trigger';
+
+type TaskOwner = {
+    ownerID: number;
+    firstName: string;
+    lastName: string;
+}
+
+type Task = {
+    ownerID: number;
+    description: string;
+};
+
+interface MyStore extends Store {
+    tables: {
+        taskOwners: Table<TaskOwner>;
+        activeTasks: Table<Task>;
+        completedTasks: Table<Task>;
+    };
+}
+
+const s: MyStore = {
+    tables: {
+        taskOwners: CreateTable<TaskOwner>({ ownerID: [], firstName: [], lastName: [], }),
+        activeTasks: CreateTable<Task>({ ownerID: [], description: [], }),
+        completedTasks: CreateTable<Task>({ ownerID: [], description: [], }),
+    },
+};
+
+/*** EXTRACT AND EXPORT OUR STORE */
+export const { tables } = extract(s);
+```
+</div>
 
 ### Use your store in your components
+
+<span style={{ fontFamily: 'monospace'}}>component.tsx</span>
+
+<div className={codeWrapper}>
+```
+import import { tables } from './store';
+
+function MyComponent() {
+    const rows = tables.activeTasks.use(null);
+
+    return (
+        <div>
+            There are {rows.length} active tasks in the table
+        </div>
+    )
+}
+```
+</div>

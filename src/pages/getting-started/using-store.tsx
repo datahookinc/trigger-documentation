@@ -2,8 +2,7 @@ import React from 'react';
 import { Navigation } from '../../components/navigation';
 import { ContentWrapper } from '../../components/contentWrapper';
 import Layout from '../../components/layout';
-import MDX from '../../content/getting-started/getting-started.mdx';
-import SEO from '../../components/seo';
+import MDX from '../../content/getting-started/using-store.mdx';
 
 export default function GettingStarted() {
     return (
@@ -17,5 +16,3 @@ export default function GettingStarted() {
         </Layout>
     )
 }
-
-export const Head = () => <SEO title="Getting Started" />

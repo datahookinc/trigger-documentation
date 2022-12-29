@@ -13,12 +13,13 @@ const StyledContentWrapper = styled.section`
     .inner {
         padding-left: 20px;
         padding-right: 20px;
-        display: flex;
-        flex-direction: column;
-        height: 100%;
+        padding-bottom: 20px;
+        max-width: 1200px;
+        margin-left: auto;
+        margin-right: auto;
         
         .instructions-main {
-            flex: 1;
+            display: flex;
             overflow: auto;
         }
 
@@ -34,13 +35,14 @@ const StyledContentWrapper = styled.section`
     }
 
     pre {
-        border-radius: 5px;
+        border-radius: 6px;
         background-color: var(--dark-blue);
         color: var(--light-gray);
         padding: 10px;
         margin-right: 20px;
         tab-size: 4;
         overflow-x: auto;
+        margin-top: 4px;
     }
 
 `;

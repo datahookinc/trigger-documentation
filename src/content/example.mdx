@@ -1,104 +1,109 @@
 import App from '../example/app';
+import { codeWrapper } from '../example/example.module.css';
 
 # Example
 
-In this example, we will build a TODO app to highlight some of the core features of **Trigger**. The final product is shown below.
+In this example, we will build a TODO app to highlight the basic functionality of **Trigger**. The final product is shown below. Click the green icon to complete a task and the read icon to activate a task.
 
 <App />
 
-### Create types for our store
+### CREATE TYPES FOR OUR STORE
 
-First, we import then generic types from the library and then define the types we will use in our application. These types will provide many conveniences when interacting with your store throughout your application.
+First, we import the generic types from the library and then define the types we will use in our application. These types will provide many conveniences when interacting with your store throughout your application.
 Starting by creating a file for your store (e.g., `store.ts`) and adding the following types:
 
 <span style={{ fontFamily: 'monospace'}}>store.ts</span>
+
+<div className={codeWrapper}>
 ```
 import { type Store, type Table } from '@datahook/trigger';
 
-type Owner = {
-    _pk: number;
+type TaskOwner = {
     ownerID: number;
     firstName: string;
     lastName: string;
 }
 
-type Item = {
-    _pk: number;
-    ownerID: Owner["ownerID"];
+type Task = {
+    ownerID: number;
     description: string;
 };
 
 interface MyStore extends Store {
     tables: {
-        owners: Table<Owner>;
-        activeItems: Table<Item>;
-        completedItems: Table<Item>;
+        taskOwners: Table<TaskOwner>;
+        activeTasks: Table<Task>;
+        completedTasks: Table<Task>;
     };
 }
 ```
+</div>
 <div>
-    <span style={{ backgroundColor: 'lightyellow' }}>**Note:** You can name your store file whatever you like, and you can have as many stores as you want to provide better localization</span>
+    <span style={{ backgroundColor: 'lightyellow' }}>**Note:** You can name your store file whatever you like, and you can have as many stores as you want to provide better localization of data in your application</span>
 </div>
 
-### Instantiate our store
+### INSTANTIATE OUR STORE
 
 With our types declared, we now instantitate our store and export it for use throughout our application. You can do this in the same file where you declared your types. Start by importing the `CreateTable` and `extract`
 convenience functions from the library, then creating a property called `tables` in your store object with empty arrays to hold your data.
 
 <span style={{ fontFamily: 'monospace'}}>store.ts</span>
+
+<div className={codeWrapper}>
 ```
-import { extract, CreateTable } from '@datahook/trigger';
+import { extract, CreateTable, type Store, type Table } from '@datahook/trigger';
 
 const s: MyStore = {
     tables: {
-        owners: CreateTable<Owner>({ _pk: [], ownerID: [], firstName: [], lastName: [], }),
-        activeItems: CreateTable<Item>({ _pk: [], ownerID: [], description: [], }),
-        deletedItems: CreateTable<Item>({ _pk: [], ownerID: [], description: [], }),
+        taskOwners: CreateTable<TaskOwner>({ ownerID: [], firstName: [], lastName: [], }),
+        activeTasks: CreateTable<Task>({ ownerID: [], description: [], }),
+        completedTasks: CreateTable<Task>({ ownerID: [], description: [], }),
     },
 };
 
 /*** EXTRACT AND EXPORT OUR STORE */
 export const { tables } = extract(s);
 ```
+</div>
 
 The final version of our store is shown below, and is now ready for use in our application.
 
 <span style={{ fontFamily: 'monospace'}}>store.ts</span>
 
+<div className={codeWrapper}>
 ```
 import { extract, CreateTable, type Store, type Table } from '@datahook/trigger';
 
-type Owner = {
-    _pk: number;
+type TaskOwner = {
     ownerID: number;
     firstName: string;
     lastName: string;
 }
 
-type Item = {
-    _pk: number;
-    ownerID: Owner["ownerID"];
+type Task = {
+    ownerID: number;
     description: string;
 };
 
 interface MyStore extends Store {
     tables: {
-        owners: Table<Owner>;
-        activeItems: Table<Item>;
-        completedItems: Table<Item>;
-        deletedItems: Table<Item>;
+        taskOwners: Table<TaskOwner>;
+        activeTasks: Table<Task>;
+        completedTasks: Table<Task>;
     };
 }
 
 const s: MyStore = {
     tables: {
-        owners: CreateTable<Owner>({ _pk: [], ownerID: [], firstName: [], lastName: [], }),
-        activeItems: CreateTable<Item>({ _pk: [], ownerID: [], description: [], }),
-        completedItems: CreateTable<Item>({ _pk: [], ownerID: [], description: [], }),
-        deletedItems: CreateTable<Item>({ _pk: [], ownerID: [], description: [], }),
+        taskOwners: CreateTable<TaskOwner>({ ownerID: [], firstName: [], lastName: [], }),
+        activeTasks: CreateTable<Task>({ ownerID: [], description: [], }),
+        completedTasks: CreateTable<Task>({ ownerID: [], description: [], }),
     },
 };
 
 /*** EXTRACT AND EXPORT OUR STORE */
 export const { tables } = extract(s);
 ```
+</div>
+
+### CREATE OUR COMPONENTS

@@ -1,31 +1,29 @@
 import { extract, CreateTable, type Store, type Table } from '@datahook/trigger';
 
-type Owner = {
-    _pk: number;
+type TaskOwner = {
     ownerID: number;
     firstName: string;
     lastName: string;
 }
 
-type Item = {
-    _pk: number;
-    ownerID: Owner["ownerID"];
+type Task = {
+    ownerID: number;
     description: string;
 };
 
 interface MyStore extends Store {
     tables: {
-        owners: Table<Owner>;
-        activeItems: Table<Item>;
-        completedItems: Table<Item>;
+        taskOwners: Table<TaskOwner>;
+        activeTasks: Table<Task>;
+        completedTasks: Table<Task>;
     };
 }
 
 const s: MyStore = {
     tables: {
-        owners: CreateTable<Owner>({ _pk: [], ownerID: [], firstName: [], lastName: [], }),
-        activeItems: CreateTable<Item>({ _pk: [], ownerID: [], description: [], }),
-        completedItems: CreateTable<Item>({ _pk: [], ownerID: [], description: [], }),
+        taskOwners: CreateTable<TaskOwner>({ ownerID: [], firstName: [], lastName: [], }),
+        activeTasks: CreateTable<Task>({ ownerID: [], description: [], }),
+        completedTasks: CreateTable<Task>({ ownerID: [], description: [], }),
     },
 };
 

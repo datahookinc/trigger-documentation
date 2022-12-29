@@ -1,11 +1,9 @@
 import React from 'react';
 import { Link } from 'gatsby';
-import { activePage } from './layout.module.css';
 import styled from 'styled-components';
 
 const StyledNavigation = styled.div`
-    flex-basis: clamp(260px, 20%, 300px);
-    border-right: 1px solid black;
+    flex-basis: clamp(280px, 20%, 320px);
     overflow-y: auto;
     font-size: 1.6rem;
 
@@ -26,6 +24,13 @@ const StyledNavigation = styled.div`
         margin-block-start: 0.83em;
         margin-block-end: 0.83em;
         font-size: 30px;
+        position: relative;
+    }
+
+    a {
+        display: block;
+        border-radius: 6px;
+        padding: 8px;
     }
 
     a, a:visited {
@@ -39,21 +44,19 @@ const StyledNavigation = styled.div`
 
     a:hover:not(a[aria-current="page"]) {
         color: var(--purple);
+        cursor: pointer;
+        background-color: var(--light-code);
     }
 
     ul {
         list-style: none;
-
-        li {
-            margin-top: 10px;
-        }
     }
 `;
 
 export function Navigation() {
     return (
         <StyledNavigation>
-            <h1>TRIGGER <sup>v0.6.0 <img src="/lightning.png" /></sup></h1>
+            <h1>TRIGGER <sup>v0.7.0 <img src="/lightning.png" /></sup></h1>
             <nav>
                 <ul>
                     <li><Link to="/">Overview</Link></li>
@@ -61,13 +64,18 @@ export function Navigation() {
                     <li>
                         <Link to="/getting-started">Getting Started</Link>
                         <ul>
-                            <li><Link to="/getting-started/store">Setting up your store</Link></li>
-                            <li><Link to="/getting-started/triggers">Working with triggers</Link></li>
+                            <li><Link to="/getting-started/store-setup">Setting up your store</Link></li>
+                            <li><Link to="/getting-started/using-store">Using your store</Link></li>
+                            <li><Link to="/getting-started/working-with-tables">Working with Tables</Link></li>
+                            <li><Link to="/getting-started/working-with-singles">Working with Singles</Link></li>
+                            <li><Link to="/getting-started/working-with-queues">Working with Queues</Link></li>
+                            <li><Link to="/getting-started/working-with-triggers">Working with triggers</Link></li>
                         </ul>
                     </li>
                     <li><Link to="/api">API</Link></li>
                     <li><Link to="/example">Example</Link></li>
-                    <li><Link to="/github">Github</Link></li>
+                    <li><a href="https://github.com/datahookinc/trigger" target="_blank" rel="noopener noreferrer">Github</a></li>
+                    <li><a href="https://www.npmjs.com/package/@datahook/trigger" target="_blank" rel="noopener noreferrer">npm</a></li>
                 </ul>
             </nav>
         </StyledNavigation>
