@@ -61,6 +61,7 @@ export function Navigation() {
                 <ul>
                     <li><Link to="/">Overview</Link></li>
                     <li><Link to="/installation">Installation</Link></li>
+                    <li><Link to="/example">Example</Link></li>
                     <li>
                         <Link to="/getting-started">Getting Started</Link>
                         <ul>
@@ -69,11 +70,10 @@ export function Navigation() {
                             <li><Link to="/getting-started/working-with-tables">Working with Tables</Link></li>
                             <li><Link to="/getting-started/working-with-singles">Working with Singles</Link></li>
                             <li><Link to="/getting-started/working-with-queues">Working with Queues</Link></li>
-                            <li><Link to="/getting-started/working-with-triggers">Working with triggers</Link></li>
+                            <li><Link to="/getting-started/working-with-triggers">Working with Triggers</Link></li>
                         </ul>
                     </li>
                     <li><Link to="/api">API</Link></li>
-                    <li><Link to="/example">Example</Link></li>
                     <li><a href="https://github.com/datahookinc/trigger" target="_blank" rel="noopener noreferrer">Github</a></li>
                     <li><a href="https://www.npmjs.com/package/@datahook/trigger" target="_blank" rel="noopener noreferrer">npm</a></li>
                 </ul>

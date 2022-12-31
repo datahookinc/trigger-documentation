@@ -18,4 +18,4 @@ export default function Installation() {
     )
 }
 
-export const Head = () => <SEO title="API" />
+export const Head = () => <SEO title="Example" />

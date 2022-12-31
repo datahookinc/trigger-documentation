@@ -3,7 +3,7 @@ import { codeWrapper } from '../example/example.module.css';
 
 # Example
 
-In this example, we will build a TODO app to highlight the basic functionality of **Trigger**. The final product is shown below. Click the green icon to complete a task and the read icon to activate a task.
+In this example, we will build a basic TODO app to highlight the basic functionality of **Trigger**. The final product is shown below. Click the green icon to complete a task and the read icon to activate a task.
 
 <App />
 
@@ -16,7 +16,7 @@ Starting by creating a file for your store (e.g., `store.ts`) and adding the fol
 
 <div className={codeWrapper}>
 ```
-import { type Store, type Table } from '@datahook/trigger';
+import { type Store, type Single, type Table } from '@datahook/trigger';
 
 type TaskOwner = {
     ownerID: number;
@@ -34,12 +34,21 @@ interface MyStore extends Store {
         taskOwners: Table<TaskOwner>;
         activeTasks: Table<Task>;
         completedTasks: Table<Task>;
-    };
+    },
+    singles: {
+        initialLoad: Single<boolean>;
+    }
 }
 ```
 </div>
 <div>
     <span style={{ backgroundColor: 'lightyellow' }}>**Note:** You can name your store file whatever you like, and you can have as many stores as you want to provide better localization of data in your application</span>
+</div>
+
+<br />
+
+<div>
+    <span style={{ backgroundColor: 'lightyellow' }}>**Note:** We are using a `single` called `initialLoad` to ensure we don't load data into our store multiple times</span>
 </div>
 
 ### INSTANTIATE OUR STORE
@@ -51,7 +60,7 @@ convenience functions from the library, then creating a property called `tables`
 
 <div className={codeWrapper}>
 ```
-import { extract, CreateTable, type Store, type Table } from '@datahook/trigger';
+import { extract, CreateTable, type Single, type Store, type Table } from '@datahook/trigger';
 
 const s: MyStore = {
     tables: {
@@ -59,10 +68,13 @@ const s: MyStore = {
         activeTasks: CreateTable<Task>({ ownerID: [], description: [], }),
         completedTasks: CreateTable<Task>({ ownerID: [], description: [], }),
     },
+    singles: {
+        initialLoad: CreateSingle(true),
+    }
 };
 
 /*** EXTRACT AND EXPORT OUR STORE */
-export const { tables } = extract(s);
+export const { tables, singles } = extract(s);
 ```
 </div>
 
@@ -72,7 +84,7 @@ The final version of our store is shown below, and is now ready for use in our a
 
 <div className={codeWrapper}>
 ```
-import { extract, CreateTable, type Store, type Table } from '@datahook/trigger';
+import { extract, CreateTable, type Store, type Single, type Table, CreateSingle } from '@datahook/trigger';
 
 type TaskOwner = {
     ownerID: number;
@@ -90,7 +102,10 @@ interface MyStore extends Store {
         taskOwners: Table<TaskOwner>;
         activeTasks: Table<Task>;
         completedTasks: Table<Task>;
-    };
+    },
+    singles: {
+        initialLoad: Single<boolean>;
+    }
 }
 
 const s: MyStore = {
@@ -99,11 +114,226 @@ const s: MyStore = {
         activeTasks: CreateTable<Task>({ ownerID: [], description: [], }),
         completedTasks: CreateTable<Task>({ ownerID: [], description: [], }),
     },
+    singles: {
+        initialLoad: CreateSingle(true),
+    }
 };
 
 /*** EXTRACT AND EXPORT OUR STORE */
-export const { tables } = extract(s);
+export const { tables, singles } = extract(s);
 ```
 </div>
 
 ### CREATE OUR COMPONENTS
+
+<div>
+    <span style={{ backgroundColor: 'lightyellow' }}>**Note:** For brevity, not all imports are shown (e.g., React, styling, etc.)</span>
+</div>
+
+<br />
+
+<span style={{ fontFamily: 'monospace'}}>app.tsx</span>
+
+<div className={codeWrapper}>
+```
+import { tables, singles } from './store';
+import TaskOwners from './taskOwners';
+import ActiveTasks from './activeTasks';
+import CompletedTasks from './completedTasks';
+
+export default function App() {
+    const initialLoad = singles.initialLoad.get();
+    useLayoutEffect(() => {
+        if (initialLoad) {
+            singles.initialLoad.set(false);
+            // Seed our owners
+            tables.taskOwners.insertRows([
+                {
+                    ownerID: 1,
+                    firstName: 'Bill',
+                    lastName: 'Gates',
+                },
+                {
+                    ownerID: 2,
+                    firstName: 'Steve',
+                    lastName: 'Jobs',
+                },
+                {
+                    ownerID: 3,
+                    firstName: 'Ada',
+                    lastName: 'Lovelace',
+                },
+                {
+                    ownerID: 4,
+                    firstName: 'Alan',
+                    lastName: 'Turing',
+                },
+            ]);
+    
+            // Create our active tasks
+            tables.activeTasks.insertRows([
+                {
+                    ownerID: 1,
+                    description: 'Invent Internet Explorer',
+                },
+                {
+                    ownerID: 2,
+                    description: 'Invent iPhone',
+                },
+                {
+                    ownerID: 3,
+                    description: 'Invent programming',
+                },
+                {
+                    ownerID: 4,
+                    description: 'Invent intelligent machines',
+                },
+            ]);
+        }
+    }, []);
+
+    return (
+        <div className={app}>
+            <TaskOwners />
+            <ActiveTasks />
+            <CompletedTasks />
+        </div>
+    )
+}
+```
+</div>
+
+<span style={{ fontFamily: 'monospace'}}>taskOwners.tsx</span>
+
+<div className={codeWrapper}>
+```
+import { tables } from './store';
+
+// Will show how may active and completed tasks for each owner
+export default function TaskOwners() {
+    const activeTasks = tables.activeTasks.use(null, ['rowDelete', 'rowInsert']);
+    const completedTasks = tables.completedTasks.use(null, ['rowDelete', 'rowInsert']);
+    const owners = tables.taskOwners.use(null);
+
+    return (
+        <div className={table}>
+            <div className={tableHeader}>Owners</div>
+            <div className={tableContainer}>
+                <table className={tableBody}>
+                    <thead>
+                        <tr>
+                            <th>Owner Name</th>
+                            <th># Active Tasks</th>
+                            <th># Completed Tasks</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {owners.map(o =>
+                            <tr key={o._pk}>
+                                <td>{o.firstName} {o.lastName}</td>
+                                <td>{activeTasks.filter(d => d.ownerID === o.ownerID).length}</td>
+                                <td>{completedTasks.filter(d => d.ownerID === o.ownerID).length}</td>
+                            </tr>
+                        )}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    )
+}
+```
+</div>
+
+<span style={{ fontFamily: 'monospace'}}>activeTasks.tsx</span>
+
+<div className={codeWrapper}>
+```
+import { tables } from './store';
+
+// Will show the active tasks
+export default function ActiveTasks() {
+    const tasks = tables.activeTasks.use(null);
+
+    const handleCompleteTask = (pk: number) => {
+        const task = tables.activeTasks.getRow(pk);
+        if (task) {
+            tables.activeTasks.deleteRow(pk);
+            tables.completedTasks.insertRow({ ownerID: task.ownerID, description: task.description });
+        }
+    }
+
+    return (
+        <div className={table}>
+            <div className={tableHeader}>Active Tasks</div>
+            <div className={tableContainer}>
+                <table className={tableBody}>
+                    <thead>
+                        <tr>
+                            <th>Owner Name</th>
+                            <th>Description</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {tasks.map(t =>
+                            <tr key={t._pk}>
+                                <td>{tables.taskOwners.getRow({ ownerID: t.ownerID})!.firstName} {tables.taskOwners.getRow({ ownerID: t.ownerID})!.lastName}</td>
+                                <td>{t.description}</td>
+                                <td className={icon} title="Click to complete task" onClick={() => handleCompleteTask(t._pk)}><CheckCircle color="success" fontSize="large"/></td>
+                            </tr>
+                        )}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    )
+}
+```
+</div>
+
+<span style={{ fontFamily: 'monospace'}}>completedTasks.tsx</span>
+
+<div className={codeWrapper}>
+```
+import { tables } from './store';
+
+// Will show the completed tasks
+export default function CompletedTasks() {
+    const tasks = tables.completedTasks.use(null);
+
+    const handleActivateTask = (pk: number) => {
+        const task = tables.completedTasks.getRow(pk);
+        if (task) {
+            tables.completedTasks.deleteRow(pk);
+            tables.activeTasks.insertRow({ ownerID: task.ownerID, description: task.description });
+        }
+    }
+
+    return (
+        <div className={table}>
+        <div className={tableHeader}>Completed Tasks</div>
+        <div className={tableContainer}>
+            <table className={tableBody}>
+                <thead>
+                    <tr>
+                        <th>Owner Name</th>
+                        <th>Item Description</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {tasks.map(t =>
+                        <tr key={t._pk}>
+                            <td>{tables.taskOwners.getRow({ ownerID: t.ownerID})!.firstName} {tables.taskOwners.getRow({ ownerID: t.ownerID})!.lastName}</td>
+                            <td>{t.description}</td>
+                            <td className={icon} title="Click to activate task" onClick={() => handleActivateTask(t._pk)}><Cancel color="error" fontSize="large"/></td>
+                        </tr>
+                    )}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    )
+}
+```
+</div>

@@ -1,10 +1,10 @@
 import React, { useLayoutEffect } from 'react';
-import { tables } from './store';
+import { tables, singles } from './store';
 import { app, icon, table, tableHeader, tableBody, tableContainer } from './example.module.css';
 import Cancel from '@mui/icons-material/CancelRounded';
 import CheckCircle from '@mui/icons-material/CheckCircle';
 
-// Will show how may active and completed items for each owner
+// Will show how may active and completed tasks for each owner
 function TaskOwners() {
     const activeTasks = tables.activeTasks.use(null, ['rowDelete', 'rowInsert']);
     const completedTasks = tables.completedTasks.use(null, ['rowDelete', 'rowInsert']);
@@ -76,7 +76,7 @@ function ActiveTasks() {
     )
 }
 
-// Will show the completed items
+// Will show the completed tasks
 function CompletedTasks() {
     const tasks = tables.completedTasks.use(null);
 
@@ -116,50 +116,54 @@ function CompletedTasks() {
 }
 
 export default function App() {
+    const initialLoad = singles.initialLoad.get();
     useLayoutEffect(() => {
-        // Seed our owners
-        tables.taskOwners.insertRows([
-            {
-                ownerID: 1,
-                firstName: 'Bill',
-                lastName: 'Gates',
-            },
-            {
-                ownerID: 2,
-                firstName: 'Steve',
-                lastName: 'Jobs',
-            },
-            {
-                ownerID: 3,
-                firstName: 'Ada',
-                lastName: 'Lovelace',
-            },
-            {
-                ownerID: 4,
-                firstName: 'Alan',
-                lastName: 'Turing',
-            },
-        ]);
-
-        // Create our active items
-        tables.activeTasks.insertRows([
-            {
-                ownerID: 1,
-                description: 'Invent Internet Explorer',
-            },
-            {
-                ownerID: 2,
-                description: 'Invent iPhone',
-            },
-            {
-                ownerID: 3,
-                description: 'Invent programming',
-            },
-            {
-                ownerID: 4,
-                description: 'Invent intelligent machines',
-            },
-        ]);
+        if (initialLoad) {
+            singles.initialLoad.set(false);
+            // Seed our owners
+            tables.taskOwners.insertRows([
+                {
+                    ownerID: 1,
+                    firstName: 'Bill',
+                    lastName: 'Gates',
+                },
+                {
+                    ownerID: 2,
+                    firstName: 'Steve',
+                    lastName: 'Jobs',
+                },
+                {
+                    ownerID: 3,
+                    firstName: 'Ada',
+                    lastName: 'Lovelace',
+                },
+                {
+                    ownerID: 4,
+                    firstName: 'Alan',
+                    lastName: 'Turing',
+                },
+            ]);
+    
+            // Create our active tasks
+            tables.activeTasks.insertRows([
+                {
+                    ownerID: 1,
+                    description: 'Invent Internet Explorer',
+                },
+                {
+                    ownerID: 2,
+                    description: 'Invent iPhone',
+                },
+                {
+                    ownerID: 3,
+                    description: 'Invent programming',
+                },
+                {
+                    ownerID: 4,
+                    description: 'Invent intelligent machines',
+                },
+            ]);
+        }
     }, []);
 
     return (

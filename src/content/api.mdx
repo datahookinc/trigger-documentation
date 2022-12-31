@@ -23,7 +23,7 @@
 </div>
 
 
-## TABLES
+## TABLES <span id="tables" />
 
 `use(where: ((v: TableEntry<T>) => boolean) | null, notify?: TableNotify[]): TableEntry<T>[]`: will rerender your component. If notify is ommitted, the component will rerender for all events. Supported events are: `'rowInsert' | 'rowUpdate' | 'rowDelete'. If a filtering function is not provided, this will return all rows in the table.
 
@@ -59,7 +59,7 @@
 
 `getRowCount(where?: Partial<T> | ((v: TableEntry<T>) => boolean)): number`: returns the current number of rows in the table. The user can pass-in an object to match rows based on equality of each property value, or a function that returns `true` if the row should be counted and `false` if it should not be counted. This function does not cause your component to rerender. Passing in nothing will count all rows in the table
 
-## SINGLES
+## SINGLES <span id="singles" />
 
 `use(): T`: will rerender your component. Every time the underlying object changes, the new value will be returned and your component will be rerendered.
 
@@ -71,7 +71,7 @@
 
 `get(): T`: will retrieve the value, but not cause your component to rerender
 
-## QUEUES
+## QUEUES <span id="queues" />
 
 `insert(item: T, cb?: (ok: boolean) => void): boolean`: insert a new item into the queue. Will return `true` if the insert was successful and `false` if not
 
@@ -79,6 +79,6 @@
 
 `get(): QueueItem<T> | undefined`: will retrieve the item at the head of the queue, or undefined if the queue is currently empty.
 
-`onGet(fn: (v: T) => void): void`: a trigger function that can be attached to a queue. The function will recieve will receive the value each time `get()` is called.
+`onGet(fn: (v: T) => void): void`: a trigger function that can be attached to a queue. The function will receive the value each time `get()` is called.
 
 `size(): number`: will return the number of items in the queue

@@ -3,6 +3,7 @@ import { Navigation } from '../../components/navigation';
 import { ContentWrapper } from '../../components/contentWrapper';
 import Layout from '../../components/layout';
 import MDX from '../../content/getting-started/using-store.mdx';
+import SEO from '../../components/seo';
 
 export default function GettingStarted() {
     return (
@@ -16,3 +17,5 @@ export default function GettingStarted() {
         </Layout>
     )
 }
+
+export const Head = () => <SEO title="Store" />
