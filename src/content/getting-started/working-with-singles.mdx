@@ -1,0 +1,100 @@
+import { codeWrapper } from '../../example/example.module.css';
+import { Link } from 'gatsby';
+
+# Working with Singles
+
+<Link to="/api#singles">Explore the full Singles API</Link>
+
+Singles are single variables that **Trigger** will manage on your behalf. A single could be a simple value, like a number, or a complex nested object. Singles help bridge the gap between
+storing your data in a data-oriented manner and the customary approach of storing your state in nested objects. Quite often, `Singles` are used to provide UI state, while `Tables` are used
+to provide data state.
+
+Singles have a simplistic API, which allows getting, setting, and using the value stored in your single.
+
+To create a single, use the `Single<T>` type declaration and it to our `store`:
+
+<div className={codeWrapper}>
+```
+import { extract, CreateSingle, type Store, type Single } from '../src';
+
+type Person = {
+    id: number;
+    name: string;
+    age: number;
+}
+
+interface MyStore extends Store {
+    singles: {
+        activeUser: Single<Person>;
+        pendingActions: Single<boolean>;
+    }
+}
+```
+</div>
+
+Notice above how `activeUser` is a an object, while `pendingActions` is a primitive value. `Singles` will allow you to manage nested, hierarhical objects as needed.
+
+With our types declared, we can now instantiate our store with our Singles and extract them for use in our application:
+
+<div className={codeWrapper}>
+```
+const s: MyStore = {
+    singles: {
+        activeUser: CreateSingle({ id: 0, name: 'Ada', age: 36 }),
+        pendingActions: CreateSingle(false),
+    }
+};
+
+/*** EXTRACT AND EXPORT OUR STORE */
+export const { singles } = extract(s);
+```
+</div>
+
+To use your single in your application, you simply import the `singles` value and use the namespaced single name:
+
+<span style={{ fontFamily: 'monospace'}}>component.tsx</span>
+
+<div className={codeWrapper}>
+```
+import import { singles } from './store';
+
+function MyComponent() {
+    const user = singles.activeUser.use();
+
+    return (
+        <div>
+            Hello {user.name}, how are you today?
+        </div>
+    )
+}
+```
+</div>
+
+## `use()` and `set()`
+
+<div>
+    <span style={{ backgroundColor: 'lightyellow' }}>**Note**: methods starting with `use` will cause your component to rerender. No other method will cause your component to rerender.</span>
+</div>
+
+The `use()` method will cause your component rerender whenever the underlying value changes. The new value will be returned to your component.
+
+**Example of `use()`:**
+
+`const currentValue = singles.activeUser.use();`
+
+retrieve the current value stored in `activeUser` and rerender the component whenever this value changes
+
+**Example of `set()`:**
+
+`singles.activeUser.set({ ...currentValue, name: 'New Name' })`
+
+To change the value in your `singles`, you call the `set()` method with the new value. **Trigger** uses equality comparisons (===) to determine if the underlying value has changed. So, if your underlying value is an
+object (like an array) you should call `set` with a new reference to the object (e.g., `set([...oldArr, newValue])`).
+
+## `get()`
+
+The `get()` method is similar to the `use()` method except it **will not cause your component to re-render**. This can be handy when you want to retrieve the value from your store, but don't want to cause a rerender.
+
+**Example of `get()`:**
+
+`const currentValue = singles.activeUser.get();`

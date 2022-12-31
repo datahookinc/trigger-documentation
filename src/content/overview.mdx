@@ -2,14 +2,37 @@
 
 Welcome to **Trigger**!
 
-**Trigger** is a `data-oriented` state management system developed for React and TypeScript. **Trigger** is lightweight, with
+**Trigger** is a <u>`data-oriented`</u> state management library developed for React and TypeScript. **Trigger** is lightweight, with
 0 dependencies, and is designed to optimize the developer experience for working with data in your application.
 
-**Trigger** borrows philosophies and design patterns from database management (e.g., INSERT/UPDATE/DELETE, triggers, transactions, etc.); however, it also
-borrows design patterns from other popular state management systems to maximize your productivity.
+**Trigger** borrows philosophies and design patterns from database management (e.g., INSERT / UPDATE / DELETE, triggers, transactions, etc.) and spreadsheets; however, it also
+borrows design patterns from other popular React state management systems to maximize your productivity.
 
 ### Why use Trigger
 
+**Trigger** was created as an alternative to state management systems that encourage using deeply nested objects for storing application state. This becomes particularly cumbersome when your application needs to READ from or WRITE to a
+relational database, which favor a flat structure. With **Trigger** you can maintain your application data in a similar structure as its source, which makes it easier to reason with data in your application. Benefits of using 
+**Trigger** include:
+
+* keeping your data in a data-oriented flat structure (e.g., SoA) will make your application easier to develop as it grows in size and complexity
+* improved performance by only rendering components subscribing to specific tables/rows - no need to invalidate the entire store to make a small state change
+* the flexibility to create traditionally nested objects using the `single` data structure
+* triggers that facilitate side-effect interactions to localize logic
+* creating more than one store to localize state as needed
+* minimal changes to your existing code base - create your store, import it, and interact with it through regular React hooks
+
 ### Core philosophies of Trigger
 
+**Trigger**'s core philosophies are:
+
+* Flat instead of nested data structures
+* Relationships between data instead of embedding
+* Granular component updates instead of coarse (scored earth) updates
+* Simple integration with your store(s)
+* An enjoyable developer experience
+
 ### When to use Trigger
+
+**Trigger** is best suited for applications that interact with an underlying data source, or have complicated state requirements. The `single` data structure provides maximum flexibility
+(similar to existing state management libraries), while the `table` data structure provides an opinionated way to manage data as you would manage tables in a
+database or spreadsheet.

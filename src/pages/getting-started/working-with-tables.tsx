@@ -2,15 +2,20 @@ import React from 'react';
 import { Navigation } from '../../components/navigation';
 import { ContentWrapper } from '../../components/contentWrapper';
 import Layout from '../../components/layout';
-import StoreMdx from '../../content/store.mdx';
+import MDX from '../../content/getting-started/working-with-tables.mdx';
+import SEO from '../../components/seo';
 
 export default function GettingStarted() {
     return (
-        <Layout pageTitle="Getting Started | Store">
+        <Layout>
             <Navigation />
             <ContentWrapper>
-                <StoreMdx />
+                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                    <MDX />
+                </div>
             </ContentWrapper>
         </Layout>
     )
 }
+
+export const Head = () => <SEO title="Tables" />

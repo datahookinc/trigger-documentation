@@ -1,0 +1,48 @@
+.app {
+    display: grid;
+    grid-auto-flow: row;
+    gap: 20px;
+}
+
+.table {
+    min-width: 300px;
+    margin: 20px;
+}
+
+.table-header {
+    background-color: var(--purple);
+    color: white;
+    font-weight: bold;
+    text-align: center;
+    border-radius: 6px 6px 0px 0px;
+}
+
+.table-container {
+    border-radius: 0px 0px 6px 6px;
+    border-left: 1px solid var(--purple-gray);
+    border-right: 1px solid var(--purple-gray);
+    border-bottom: 1px solid var(--purple-gray);
+}
+
+.table-body {
+    width: 100%;
+    text-align: center;
+}
+
+.table-body th {
+    text-decoration: underline;
+}
+
+.table-body .icon {
+    cursor: pointer;
+    transition: opacity .2s linear;
+}
+
+.icon:hover {
+    opacity: 0.5;
+}
+
+.code-wrapper {
+    display: inline-flex;
+    flex-direction: column;
+}

@@ -1,0 +1,96 @@
+import { codeWrapper } from '../../example/example.module.css';
+
+# Setting up your store
+
+Your store is created by first declaring your types, and then instantiating your store values. Typically, you will keep your store in a separate file for easier reference; however,
+this is not strictly required.
+
+Here is an example store:
+
+<span style={{ fontFamily: 'monospace'}}>store.ts</span>
+
+<div className={codeWrapper}>
+```
+import { extract, CreateTable, type Store, type Table } from '@datahook/trigger';
+
+// declare a table type
+type Person = {
+    id: number;
+    name: string;
+    age: number;
+}
+
+// declare the store type
+interface MyStore extends Store {
+    tables: {
+        person: Table<Person>;
+    };
+}
+
+// create the store
+const s: MyStore = {
+    tables: {
+        person: CreateTable<Person>({ id: [], name: [], age: []}),
+    },
+};
+
+/*** EXTRACT AND EXPORT OUR STORE */
+export const { tables } = extract(s);
+```
+</div>
+
+In the example above, half of the code is for declaring our table and store types. We first create a type called `Person` to represent a table in our store. We then declare our store by extending **Trigger**'s default store.
+
+Once we have a our types declared, we can then create our store, along with the initial values for our tables. In this example, the initial table is empty, which is why we pass empty arrays for each of our properties.
+
+Finally, to use your store, we use **Trigger**'s `extract` function, which pulls the `tables`, `singles`, and `queues` out of the table for exporting. Now, the tables in your store are namespaced and can be referenced as
+`tables.person` to provide a great developer experience.
+
+
+If our table had `singles` and `queues`, the store would look like this:
+
+```
+import { extract, CreateSingle, CreateTable, CreateQueue, type Single, type Store, type Table, type Queue } from '@datahook/trigger';
+
+// declare a table type
+type Person = {
+    id: number;
+    name: string;
+    age: number;
+}
+
+// declare the store type
+interface MyStore extends Store {
+    tables: {
+        person: Table<Person>;
+    };
+    singles: {
+        activeTab: Single<number>;
+    }
+    queues: {
+        eventQueue: Queue<string>;
+    };
+}
+
+// create the store
+const s: MyStore = {
+    tables: {
+        person: CreateTable<Person>({ id: [], name: [], age: []}),
+    },
+    singles: {
+        activeTab: CreateSingle<number>(0),
+    },
+    queues: {
+        eventQueue: CreateQueue<string>(),
+    }
+};
+
+/*** EXTRACT AND EXPORT OUR STORE */
+export const { tables, singles, queues } = extract(s);
+```
+
+Notice how when we declare our store we use the `Table`, `Single`, and `Queue` types, and when we create our store we use the `CreateTable()`, `CreateSingle()`, and `CreateQueue()` functions.
+
+You can add as many tables, singles, and queues as you like to your store. It is common for singles to be used for UI type information (e.g., active tab) and for queues to be used for event processing - similar
+to how you would use a regular reducer function. This basic structure is how all of your stores will be setup, with most of the complexity coming from declaring your types.
+

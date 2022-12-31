@@ -1,0 +1,91 @@
+import { codeWrapper } from '../../example/example.module.css';
+import { Link } from 'gatsby';
+
+# Working with Queues
+
+<Link to="/api#queues">Explore the full Queues API</Link>
+
+Queues are a managed data structure, similar to an array, that allow you to insert and retrieve items. Queues **will not** cause your components to re-render. Think of them as a safe way to
+interact with a queue across your components.
+
+Queues have a simplistic API, and are often paired with a `Single` to notify your components when there is new data available in the queue. This can be especially useful when you are using a Queue
+as a message broker between your components for performing state changes.
+
+To create a queue, use the `Queue<T>` type declaration and it to our `store` type:
+
+<div className={codeWrapper}>
+```
+import { extract, CreateSingle, type Store, type Single } from '../src';
+
+interface MyStore extends Store {
+    queues: {
+        eventQueue: Queue<string>;
+    };
+}
+```
+</div>
+
+<div className={codeWrapper}>
+```
+const s: MyStore = {
+    queues: {
+        eventQueue: CreateQueue<string>(),
+    },
+};
+
+/*** EXTRACT AND EXPORT OUR STORE */
+export const { queues } = extract(s);
+```
+</div>
+
+To use your `queue` in your application, you simply import the `queues` value and use the namespaced queue name:
+
+<span style={{ fontFamily: 'monospace'}}>component.tsx</span>
+
+<div className={codeWrapper}>
+```
+import { queues } from './store';
+
+function MyComponent() {
+    const event = queues.eventQueue.get();
+
+    return (
+        <div>
+            { event && <div>{event}</div>}
+        </div>
+    )
+}
+```
+</div>
+
+## `get()` and `insert()`
+
+The `get()` method allows you to retrieve the value in your `queue` **without causing a rerender**. `get()` will return the item at the head of the queue, or `undefined` if the queue is currently empty.
+
+**Example of `get()`:**
+
+`const item = queues.eventQueue.get();`
+
+**Example of `insert()`:**
+
+`queues.eventQueue.insert('switchTabs');`
+
+The `insert()` method allows you to push a new item on to the queue. `insert()` returns `true` if the insert was successful and `false` if not. You can pass an optional callback function that will be called
+after the insert has taken place, with a single argument indicating if the insert was successful or not.
+
+## `onInsert()`
+
+The `onInsert()` method is a trigger function that can be attached to a queue. The function will receive the inserted value. A common use case for the `onInsert()` trigger is to set the value of a `single` that causes a component
+to rerender and ingest the values in the queue. This is required because queues themselves to do not cause your components to rerender.
+
+**Example of `onInsert()`**
+
+<div className={codeWrapper}>
+```
+s.queues.eventQueue.onInsert(() => {
+    s.singles.pendingActions.set(true);
+});
+```
+</div>
+
+In the above example, the `onInsert()` trigger for the queue will notify a `single` that there are pending actions. This `single` can be used in a component that ingests the queue's data when it is available.

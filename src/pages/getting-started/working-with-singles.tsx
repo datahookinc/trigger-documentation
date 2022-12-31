@@ -2,7 +2,7 @@ import React from 'react';
 import { Navigation } from '../../components/navigation';
 import { ContentWrapper } from '../../components/contentWrapper';
 import Layout from '../../components/layout';
-import MDX from '../../content/getting-started/getting-started.mdx';
+import MDX from '../../content/getting-started/working-with-singles.mdx';
 import SEO from '../../components/seo';
 
 export default function GettingStarted() {
@@ -18,4 +18,4 @@ export default function GettingStarted() {
     )
 }
 
-export const Head = () => <SEO title="Getting Started" />
+export const Head = () => <SEO title="Queues" />

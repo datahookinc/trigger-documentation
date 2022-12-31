@@ -3,10 +3,11 @@ import { Navigation } from '../components/navigation';
 import { ContentWrapper } from '../components/contentWrapper';
 import Layout from '../components/layout';
 import MDX from '../content/overview.mdx';
+import SEO from '../components/seo';
 
 export default function Overview() {
     return (
-        <Layout pageTitle="Overview">
+        <Layout>
             <Navigation />
             <ContentWrapper>
                 <MDX />
@@ -14,3 +15,5 @@ export default function Overview() {
         </Layout>
     )
 }
+
+export const Head = () => <SEO title="Overview" />

@@ -1,0 +1,91 @@
+import { codeWrapper } from '../../example/example.module.css';
+
+# Working with triggers
+
+Triggers are an idiomatic way to perform side effects when interacting with your **Tables**, **Singles**, and **Queues**. This can be quite useful in situations where you need to verify the input, decorate the returned values
+with data found in another table/single/queue, or even prevent the action from occurring entirely. This provides a centralized way of managing the data moving into and out of your store, without needing to create separate functions across
+your applicaiton.
+
+<div>
+    <span style={{ backgroundColor: 'lightyellow' }}>**Note:** All triggers in the API are prefixed with `on` (e.g., `onBeforeInsert`, `onSet`, `onAfterUpdate`, etc.).</span>
+</div>
+
+The easiest way to manage your triggers is to declare them when creating your store. For instance, imagine we have created a store with a `customers` table and every time the user attempts to insert a row we interrogate the value
+to see if we want to allow it or change it. For this, we would use the table's `onBeforeInsert()` trigger:
+
+<span style={{ fontFamily: 'monospace'}}>store.ts</span>
+
+<div className={codeWrapper}>
+```
+const s: MyStore = {
+    tables: {
+        customers: CreateTable<Customer>({ customerID: [], firstName: [], lastName: [] }),
+    },
+};
+
+s.tables.customers.onBeforeInsert((v) => {
+    if (v.firstName === 'OmitMe') {
+        return false;
+    }
+
+    if (v.lastName === 'ChangeMe') {
+        v.lastName = 'Changed';
+        return v;
+    }
+});
+
+```
+</div>
+
+<div>
+    <span style={{ backgroundColor: 'lightyellow' }}>**Note:** You cannot have multiple functions for the same trigger. If a trigger function is redeclared, it will overwrite any existing triggers.</span>
+</div>
+
+Now, let's say we want to interrogate the values when a user attempts to update rows in the table. For this, we will use the `onBeforeUpdate()` trigger:
+
+<div className={codeWrapper}>
+```
+const s: MyStore = {
+    tables: {
+        customers: CreateTable<Customer>({ customerID: [], firstName: [], lastName: [] }),
+    },
+};
+
+s.tables.customers.onBeforeUpdate((cv, nv) => {
+    if (cv.firstName === 'UpdateMe') {
+        nv.firstName = 'Changed before update';
+        return nv;
+    }
+});
+```
+</div>
+
+Notice how the `onBeforeUpdate()` trigger provides us with the current value (`cv`) and the pending new value (`nv`). This allows you to review the current value and determine if you want to access the proposed
+new values.
+
+A popular use case for triggers is to interact with data in other tables, singles, and queues in your store. Trigger requires your tables to be in a flat structure, which often leads to relationships between tables
+to create hiearchies and n-to-n relations. In this setup, you may want to create records in one table when you insert records in another table. In our example above, imagine if every time we create a new `customer` in our
+store we also want to create a new `orders` entry. This can be accomplished with the `onAfterInsert()` trigger along with an `insertRow()` action on the `orders` table. This use case was the inspiration for triggers so the
+user would not need to remember that a relationship exists between these two or more tables - they can declare it idiomatically with triggers when creating their store.
+
+
+<div className={codeWrapper}>
+```
+const s: MyStore = {
+    tables: {
+        customers: CreateTable<Customer>({ customerID: [], firstName: [], lastName: [] }),
+        orders: CreateTable<Order>({ orderID: [], customerID: [], orderLocation: [], orderDate: [] }),
+    },
+};
+
+s.tables.customers.onAfterInsert(v => {
+    s.tables.orders.insertRow({ orderID: 100, customerID: v.customerID, orderDate: new Date(), orderLocation: '' });
+});
+```
+</div>
+
+<div>
+    <span style={{ backgroundColor: 'lightyellow' }}>**Note:** Be cautious! **Trigger** will not prevent circular triggers (e.g., triggers that cause themselves to fire ad infinitum) - preventing circular 
+        triggers is planned for a future release.</span>
+</div>
+
