@@ -112,18 +112,18 @@ a user-defined function, the function will receive each row in the table individ
 
 ```tsx
 // retrieve all rows from the table, and re-render it every time there is a change to the table
-use(null);
+const rows = use(null);
 ```
 
 ```tsx
 // retrieve all rows from the table, and re-render it every time a row is inserted or deleted
-use(null, ['rowInsert', 'rowDelete']);
+const rows = use(null, ['rowInsert', 'rowDelete']);
 ```
 
 ```tsx
 // retrieve only rows from the table where the "value" property is greater than 10,
 // and re-render it every time a row is inserted.
-use(v => v.value > 10, ['rowInsert']);
+const rows = use(v => v.value > 10, ['rowInsert']);
 ```
 
 <mark>**Note**: Trigger will compare the current values in your component to the new values to determine if a re-render is required</mark>
@@ -138,13 +138,13 @@ then subscribe to that row's changes. The notify list for **use** can accept **r
 
 ```tsx
 // retrieve the row from the table whose "_pk_" property is 10
-useRow(10);
+const row = useRow(10);
 ```
 
 ```tsx
 // retrieve the row from the table whose "_pk_" property is 10,
 // and only re-render the component when the row is deleted
-useRow(10, ['rowDelete']);
+const row = useRow(10, ['rowDelete']);
 ```
 
 ## **get()** and **getRows()**
@@ -159,12 +159,12 @@ user-defined function that receives each entry in the table individually and the
 
 ```tsx
 // retrieve all rows in the table where the "firstName" property is set to "Ada"
-getRows({ firstName: 'Ada' });
+const rows = getRows({ firstName: 'Ada' });
 ```
 
 ```tsx
 // retrive all rows in the table where the "ownerID" is greater than 10.
-getRows(v => v.ownerID > 10);
+const rows = getRows(v => v.ownerID > 10);
 ```
 
 The **getRow()** method will return the first row that matches your **where** predicate. Your **where** predicate can be a primary key ("_\_pk_"), an object whose properties are the columns in your table and values
@@ -175,15 +175,15 @@ If no entries are found, the function will return undefined.
 
 ```tsx
 // retrieve the row from the table whose "_pk_" property is 10
-getRow(10);
+const row = getRow(10);
 ```
 
 ```tsx
 // retrieve the first row in the table where the "firstName" property is set to "Ada"
-getRow({ firstName: 'Ada' });
+const row = getRow({ firstName: 'Ada' });
 ```
 
 ```tsx
 // retrieve the first row in the table where the "ownerID" is greater than 10.
-getRow(v => v.ownerID > 10);
+const row = getRow(v => v.ownerID > 10);
 ```
