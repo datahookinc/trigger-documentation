@@ -10,15 +10,15 @@ Tables are the backbone of **Trigger** and offer unique experiences compared to 
 To create tables in your store, you first declare the table type, where each property represents a column/attribute/feature in our table:
 
 <div className={codeWrapper}>
-```
-import { extract, CreateTable, type Store, type Table } from '@datahook/trigger';
+    ```typescript
+    import { extract, CreateTable, type Store, type Table } from '@datahook/trigger';
 
-type TaskOwner = {
-    ownerID: number;
-    firstName: string;
-    lastName: string;
-}
-```
+    type TaskOwner = {
+        ownerID: number;
+        firstName: string;
+        lastName: string;
+    }
+    ```
 </div>
 
 
@@ -33,153 +33,157 @@ In **Trigger**, your tables must be "flat". This means table values can only be 
 When you insert a row into a table, trigger will automatically handle assigning the "_\_pk_"  value to your rows. If you need to store nested objects, you have two options:
 
 1. Redefine the nested nature of your objects as flat tables with properties (columns) you can use to relate to one another
-2. Use **Trigger**'s `Singles` data type, which allows any kind of data to be stored
+2. Use **Trigger**'s **Singles** data type, which allows any kind of data to be stored
 
 **Trigger** will use our table types to improve the developer experience as you interact with your store.
 
-Once you have created your table type, you can add it to your store type under the `tables` property:
+Once you have created your table type, you can add it to your store type under the **tables** property:
 
 <div className={codeWrapper}>
-```
-interface MyStore extends Store {
-    tables: {
-        taskOwners: Table<TaskOwner>;
-    };
-}
-```
+    ```typescript
+    interface MyStore extends Store {
+        tables: {
+            taskOwners: Table<TaskOwner>;
+        };
+    }
+    ```
 </div>
 
 Finally, you create your store with the types you have declared and export the table for use in your application:
 
 <div className={codeWrapper}>
-```
-const s: MyStore = {
-    tables: {
-        taskOwners: CreateTable<TaskOwner>({ ownerID: [], firstName: [], lastName: [], }),
-    },
-};
+    ```typescript
+    const s: MyStore = {
+        tables: {
+            taskOwners: CreateTable<TaskOwner>({ ownerID: [], firstName: [], lastName: [], }),
+        },
+    };
 
-/*** EXTRACT AND EXPORT OUR STORE */
-export const { tables } = extract(s);
-```
+    /*** EXTRACT AND EXPORT OUR STORE */
+    export const { tables } = extract(s);
+    ```
 </div>
 
-The `CreateTable` function provides the functionality **Trigger** uses to manage your table. A couple of points worth noting when calling `CreateTable`:
+The **CreateTable** function provides the functionality **Trigger** uses to manage your table. A couple of points worth noting when calling **CreateTable**:
 
 * You must pass **all** properties for your table
 * You can pass empty arrays, or you can prepopulate the arrays with values
 * If you prepopulate the arrays with values, all arrays must contain the same number of elements or **Trigger** will throw an error
 
 Declaring our table types and store types are important because they provide an improved developer experience across your application. To use your table in your application, 
-you simply import the `tables` value and use the namespaced table:
+you simply import the **tables** value and use the namespaced table:
 
 <span style={{ fontFamily: 'monospace'}}>component.tsx</span>
 
 <div className={codeWrapper}>
-```
-import import { tables } from './store';
+    ```tsx
+    import import { tables } from './store';
 
-function MyComponent() {
-    const rows = tables.activeTasks.use(null);
+    function MyComponent() {
+        const rows = tables.activeTasks.use(null);
 
-    return (
-        <div>
-            There are {rows.length} active tasks in the table
-        </div>
-    )
-}
-```
+        return (
+            <div>
+                There are {rows.length} active tasks in the table
+            </div>
+        )
+    }
+    ```
 </div>
 
 Behind the scenes, **Trigger** will assign a unique, sequential primary key column to each of your tables. This property is accessed as "_\_pk_" and provides many conveniences for the internal functions of **Trigger**, and can
-be used in your application to uniquely identify each row. For instance, the "_\_pk_" property is a great candidate for the `key` property when creating lists in React.
+be used in your application to uniquely identify each row. For instance, the "_\_pk_" property is a great candidate for the **key** property when creating lists in React.
 
+## **use()** and **useRow()**
 
+<mark>**Note**: methods starting with **use** will cause your component to rerender. No other method will cause your component to rerender.</mark>
 
-## `use()` and `useRow()`
+With tables, the **use** and **useRow** methods are how you can update your component when changes occur to the table.
 
-<div>
-    <span style={{ backgroundColor: 'lightyellow' }}>**Note**: methods starting with `use` will cause your component to rerender. No other method will cause your component to rerender.</span>
-</div>
+The **use** method will return an array of rows matching you **where** predicate and your **notify** list. If your **where** predicate is set to **null**, it means you would like to receive all rows in the table. If your **where** predicate is
+a user-defined function, the function will receive each row in the table individually and the user must return a boolean to determine if the row should be retrieved. The notify list for **use** can accept 
+**rowInsert**, **rowUpdate**, and **rowDelete**.
 
-With tables, the `use` and `useRow` methods are how you can update your component when changes occur to the table.
+* **rowInsert**: any time a new row is inserted in the table, re-render this component
+* **rowUpdate**: any time a row is updated in the table, re-render the component
+* **rowDelete**: any time a row is deleted in the table, re-render the component
 
-The `use` method will return an array of rows matching you `where` predicate and your `notify` list. If your `where` predicate is set to `null`, it means you would like to receive all rows in the table. If your `where` predicate is
-a user-defined function, the function will receive each row in the table individually and the user must return a boolean to determine if the row should be retrieved. The notify list for `use` can accept 
-`rowInsert`, `rowUpdate`, and `rowDelete`.
+**Examples of **use()**:**
 
-* `rowInsert`: any time a new row is inserted in the table, re-render this component
-* `rowUpdate`: any time a row is updated in the table, re-render the component
-* `rowDelete`: any time a row is deleted in the table, re-render the component
+```tsx
+// retrieve all rows from the table, and re-render it every time there is a change to the table
+use(null);
+```
 
-**Examples of `use()`:**
+```tsx
+// retrieve all rows from the table, and re-render it every time a row is inserted or deleted
+use(null, ['rowInsert', 'rowDelete']);
+```
 
-`use(null);`
+```tsx
+// retrieve only rows from the table where the "value" property is greater than 10,
+// and re-render it every time a row is inserted.
+use(v => v.value > 10, ['rowInsert']);
+```
 
-retrieve all rows from the table, and re-render it every time there is a change to the table
+<mark>**Note**: Trigger will compare the current values in your component to the new values to determine if a re-render is required</mark>
 
-`use(null, ['rowInsert', 'rowDelete'];`
+The **useRow** method will return a single row or **undefined** for any row that matches the "_\_pk_". In practice, **use** and **useRow** are often used in tandem, where are parent component will pass the "_\_pk_" to child components who
+then subscribe to that row's changes. The notify list for **use** can accept **rowUpdate**, and **rowDelete**.
 
-retrieve all rows from the table, and re-render it every time a row is inserted or deleted
+* **rowUpdate**: if the row is updated, re-render the component
+* **rowDelete**: if the row is deleted from the table, re-render the component
 
-`use(v => v.value > 10, ['rowInsert'];`
+**Examples of **useRow()**:**
 
-retrieve only rows from the table where the value property is greater than 10, and re-render it every time a row is inserted.
+```tsx
+// retrieve the row from the table whose "_pk_" property is 10
+useRow(10);
+```
 
-<div>
-    <span style={{ backgroundColor: 'lightyellow' }}>**Note**: Trigger will compare the current values in your component to the new values to determine if a re-render is required</span>
-</div>
+```tsx
+// retrieve the row from the table whose "_pk_" property is 10,
+// and only re-render the component when the row is deleted
+useRow(10, ['rowDelete']);
+```
 
+## **get()** and **getRows()**
 
-The `useRow` method will return a single row or `undefined` for any row that matches the "_\_pk_". In practice, `use` and `useRow` are often used in tandem, where are parent component will pass the "_\_pk_" to child components who
-then subscribe to that row's changes. The notify list for `use` can accept `rowUpdate`, and `rowDelete`.
-
-* `rowUpdate`: if the row is updated, re-render the component
-* `rowDelete`: if the row is deleted from the table, re-render the component
-
-**Examples of `useRow()`:**
-
-`useRow(10);`
-
-retrieve the row from the table whose "_\_pk_" property is 10
-
-`useRow(10, ['rowDelete'];`
-
-retrieve the row from the table whose "_\_pk_" property is 10, and only re-render the component when the row is deleted
-
-## `get()` and `getRows()`
-
-The `get()` and `getRows()` methods are similar to `use()` and `useRow()` except they **will not cause your component to rerender**. These methods are handy for when you want to retrieve rows from your store, but you don't
+The **get()** and **getRows()** methods are similar to **use()** and **useRow()** except they **will not cause your component to rerender**. These methods are handy for when you want to retrieve rows from your store, but you don't
 want to cause a re-render. A common use case for this is to query for a row to retrieve its "_\_pk_" for further use in your application.
 
-The `getRows()` method will return an array of rows matching you `where` predicate. Your `where` predicate can be an object whose properties are the columns in your table and values are those that you want to match, or a
+The **getRows()** method will return an array of rows matching you **where** predicate. Your **where** predicate can be an object whose properties are the columns in your table and values are those that you want to match, or a
 user-defined function that receives each entry in the table individually and the user must return a boolean to determine if the row should be retrieved. If no entries are found, the function will return an empty array.
 
-**Examples of `getRows()`:**
+**Examples of getRows():**
 
-`getRows({ firstName: 'Ada' });`
+```tsx
+// retrieve all rows in the table where the "firstName" property is set to "Ada"
+getRows({ firstName: 'Ada' });
+```
 
-retrieve all rows in the table where the `firstName` property is set to `Ada`
+```tsx
+// retrive all rows in the table where the "ownerID" is greater than 10.
+getRows(v => v.ownerID > 10);
+```
 
-`getRows(v => v.ownerID > 10);`
-
-retrive all rows in the table where the `ownerID` is greater than 10.
-
-
-The `getRow()` method will return the first row that matches your `where` predicate. Your `where` predicate can be a primary key ("_\_pk_"), an object whose properties are the columns in your table and values
+The **getRow()** method will return the first row that matches your **where** predicate. Your **where** predicate can be a primary key ("_\_pk_"), an object whose properties are the columns in your table and values
 are those that you want to match, or a user-defined function that receives each entry in the table individually and the user must return a boolean to determine if the row should be retrieved.
 If no entries are found, the function will return undefined.
 
-**Examples of `getRow()`:**
+**Examples of getRow():**
 
-`getRow(10);`
+```tsx
+// retrieve the row from the table whose "_pk_" property is 10
+getRow(10);
+```
 
-retrieve the row from the table whose "_\_pk_" property is 10
+```tsx
+// retrieve the first row in the table where the "firstName" property is set to "Ada"
+getRow({ firstName: 'Ada' });
+```
 
-`getRow({ firstName: 'Ada' });`
-
-retrieve the first row in the table where the `firstName` property is set to `Ada`
-
-`getRow(v => v.ownerID > 10);`
-
-retrive the first row in the table where the `ownerID` is greater than 10.
+```tsx
+// retrieve the first row in the table where the "ownerID" is greater than 10.
+getRow(v => v.ownerID > 10);
+```

@@ -34,17 +34,6 @@ const StyledContentWrapper = styled.section`
         text-transform: uppercase;
     }
 
-    pre {
-        border-radius: 6px;
-        background-color: var(--dark-blue);
-        color: var(--light-gray);
-        padding: 10px;
-        margin-right: 20px;
-        tab-size: 4;
-        overflow-x: auto;
-        margin-top: 4px;
-    }
-
 `;
 
 type Props = {

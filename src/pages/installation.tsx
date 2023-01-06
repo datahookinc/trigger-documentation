@@ -7,12 +7,14 @@ import SEO from '../components/seo';
 
 export default function Installation() {
     return (
-        <Layout>
-            <Navigation />
-            <ContentWrapper>
-                <MDX />
-            </ContentWrapper>
-        </Layout>
+        <>
+            <Layout>
+                <Navigation />
+                <ContentWrapper>
+                    <MDX />
+                </ContentWrapper>
+            </Layout>
+        </>
     )
 }
 

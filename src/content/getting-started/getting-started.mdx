@@ -5,7 +5,7 @@ import { Link } from 'gatsby';
 
 ### Add Trigger to your project
 
-```
+```bash
 npm i @datahook/trigger
 ```
 
@@ -14,39 +14,39 @@ npm i @datahook/trigger
 <span style={{ fontFamily: 'monospace'}}>store.ts</span>
 
 <div className={codeWrapper}>
-```
-import { extract, CreateTable, type Store, type Table } from '@datahook/trigger';
+    ```typescript
+    import { extract, CreateTable, type Store, type Table } from '@datahook/trigger';
 
-type TaskOwner = {
-    ownerID: number;
-    firstName: string;
-    lastName: string;
-}
+    type TaskOwner = {
+        ownerID: number;
+        firstName: string;
+        lastName: string;
+    }
 
-type Task = {
-    ownerID: number;
-    description: string;
-};
-
-interface MyStore extends Store {
-    tables: {
-        taskOwners: Table<TaskOwner>;
-        activeTasks: Table<Task>;
-        completedTasks: Table<Task>;
+    type Task = {
+        ownerID: number;
+        description: string;
     };
-}
 
-const s: MyStore = {
-    tables: {
-        taskOwners: CreateTable<TaskOwner>({ ownerID: [], firstName: [], lastName: [], }),
-        activeTasks: CreateTable<Task>({ ownerID: [], description: [], }),
-        completedTasks: CreateTable<Task>({ ownerID: [], description: [], }),
-    },
-};
+    interface MyStore extends Store {
+        tables: {
+            taskOwners: Table<TaskOwner>;
+            activeTasks: Table<Task>;
+            completedTasks: Table<Task>;
+        };
+    }
 
-/*** EXTRACT AND EXPORT OUR STORE */
-export const { tables } = extract(s);
-```
+    const s: MyStore = {
+        tables: {
+            taskOwners: CreateTable<TaskOwner>({ ownerID: [], firstName: [], lastName: [], }),
+            activeTasks: CreateTable<Task>({ ownerID: [], description: [], }),
+            completedTasks: CreateTable<Task>({ ownerID: [], description: [], }),
+        },
+    };
+
+    /*** EXTRACT AND EXPORT OUR STORE */
+    export const { tables } = extract(s);
+    ```
 </div>
 
 ### Use your store in your components
@@ -54,19 +54,19 @@ export const { tables } = extract(s);
 <span style={{ fontFamily: 'monospace'}}>component.tsx</span>
 
 <div className={codeWrapper}>
-```
-import import { tables } from './store';
+    ```tsx
+    import import { tables } from './store';
 
-function MyComponent() {
-    const rows = tables.activeTasks.use(null);
+    function MyComponent() {
+        const rows = tables.activeTasks.use(null);
 
-    return (
-        <div>
-            There are {rows.length} active tasks in the table
-        </div>
-    )
-}
-```
+        return (
+            <div>
+                There are {rows.length} active tasks in the table
+            </div>
+        )
+    }
+    ```
 </div>
 
 ### Explore the full API for all available functionality

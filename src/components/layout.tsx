@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { 
     container
 } from './layout.module.css'; // no type safety; automatically converts kebab case to camelCase for use in JS
@@ -10,12 +10,15 @@ type Props = {
 }
 
 export default function Layout({ children }: Props) {
+
     return (
-        <div className={container}>
-            <Content>
-                {children}
-            </Content>
-            <Footer />
-        </div>
+        <>
+            <div className={container}>
+                <Content>
+                    {children}
+                </Content>
+                <Footer />
+            </div>
+        </>
     )
 }

@@ -22,6 +22,6 @@ html, body {
     margin: 0;
 }
 
-code:not(pre code) {
-    font-weight: bold;
+mark {
+    background-color: lightyellow;
 }
