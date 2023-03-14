@@ -23,8 +23,8 @@ const StyledContentWrapper = styled.section`
             overflow: auto;
         }
 
-        @media only screen and (max-width: 600px) {
-            padding-bottom: 40px;
+        @media only screen and (max-width: 800px) {
+            padding-bottom: 60px;
             padding-right: 20px;
         }
     }

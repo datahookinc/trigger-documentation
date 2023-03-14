@@ -8,7 +8,7 @@ import CheckCircle from '@mui/icons-material/CheckCircle';
 function TaskOwners() {
     const activeTasks = tables.activeTasks.use(null, ['rowDelete', 'rowInsert']);
     const completedTasks = tables.completedTasks.use(null, ['rowDelete', 'rowInsert']);
-    const owners = tables.taskOwners.use(null);
+    const owners = tables.taskOwners.use();
 
     return (
         <div className={table}>
@@ -39,7 +39,7 @@ function TaskOwners() {
 
 // Will show the active tasks
 function ActiveTasks() {
-    const tasks = tables.activeTasks.use(null);
+    const tasks = tables.activeTasks.use();
 
     const handleCompleteTask = (pk: number) => {
         const task = tables.activeTasks.getRow(pk);
@@ -78,7 +78,7 @@ function ActiveTasks() {
 
 // Will show the completed tasks
 function CompletedTasks() {
-    const tasks = tables.completedTasks.use(null);
+    const tasks = tables.completedTasks.use();
 
     const handleActivateTask = (pk: number) => {
         const task = tables.completedTasks.getRow(pk);

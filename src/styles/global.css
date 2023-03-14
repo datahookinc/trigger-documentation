@@ -25,3 +25,22 @@ html, body {
 mark {
     background-color: lightyellow;
 }
+
+.inline-code-background {
+    padding: 0.2em 0.4em;
+    margin: 0;
+    font-size: 85%;
+    white-space: break-spaces;
+    border-radius: 6px;
+    font-family: ui-monospace,SFMono-Regular,SF Mono,Menlo,Consolas,Liberation Mono,monospace;
+    background-color: var(--context-background);
+    color: white;
+    font-weight: bold;
+}
+
+.inline-code {
+    white-space: break-spaces;
+    font-family: ui-monospace,SFMono-Regular,SF Mono,Menlo,Consolas,Liberation Mono,monospace;
+    font-weight: bold;
+    font-size: 110%
+}

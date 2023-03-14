@@ -58,7 +58,7 @@ npm i @datahook/trigger
     import import { tables } from './store';
 
     function MyComponent() {
-        const rows = tables.activeTasks.use(null);
+        const rows = tables.activeTasks.use();
 
         return (
             <div>

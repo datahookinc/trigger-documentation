@@ -8,10 +8,10 @@ import { Link } from 'gatsby';
 Queues are a managed data structure, similar to an array, that allow you to insert and retrieve items. Queues **will not** cause your components to re-render. Think of them as a safe way to
 interact with a queue across your components.
 
-Queues have a simplistic API, and are often paired with a **Single** to notify your components when there is new data available in the queue. This can be especially useful when you are using a Queue
+Queues have a simplistic API, and are often paired with a <span class="inline-code">Single</span> to notify your components when there is new data available in the queue. This can be especially useful when you are using a Queue
 as a message broker between your components for performing state changes.
 
-To create a queue, use the **Queue\<T\>** type declaration and it to our **store** type:
+To create a queue, use the <span class="inline-code">Queue\<T\></span> type declaration and it to our **store** type:
 
 <div className={codeWrapper}>
 ```typescript
@@ -38,7 +38,7 @@ export const { queues } = extract(s);
 ```
 </div>
 
-To use your **queue** in your application, you simply import the **queues** value and use the namespaced queue name:
+To use your <span class="inline-code">queue</span> in your application, you simply import the <span class="inline-code">queues</span> value and use the namespaced queue name:
 
 <span style={{ fontFamily: 'monospace'}}>component.tsx</span>
 
@@ -58,31 +58,31 @@ function MyComponent() {
 ```
 </div>
 
-## get() and insert()
+## <span class="inline-code">get()</span> and <span class="inline-code">insert()</span>
 
-The **get()** method allows you to retrieve the value in your **queue** <u>**without causing a rerender**</u>. **get()** will return the item at the head of the queue, or **_undefined_** if the queue is currently empty.
+The <span class="inline-code">get()</span> method allows you to retrieve the value in your <span class="inline-code">queue</span> <u>**without causing a rerender**</u>. <span class="inline-code">get()</span> will return the item at the head of the queue, or **_undefined_** if the queue is currently empty.
 
-**Example of get():**
+**Example of <span class="inline-code">get()</span>:**
 
 ```typescript
 const item = queues.eventQueue.get();
 ```
 
-**Example of insert():**
+**Example of <span class="inline-code">insert()</span>:**
 
 ```typescript
 queues.eventQueue.insert('switchTabs');
 ```
 
-The **insert()** method allows you to push a new item on to the queue. **insert()** returns **true** if the insert was successful and **false** if not. You can pass an optional callback function that will be called
+The <span class="inline-code">insert()</span> method allows you to push a new item on to the queue. <span class="inline-code">insert()</span> returns <span class="inline-code">true</span> if the insert was successful and <span class="inline-code">false</span> if not. You can pass an optional callback function that will be called
 after the insert has taken place, with a single argument indicating if the insert was successful or not.
 
-## onInsert()
+## <span class="inline-code">onInsert()</span>
 
-The **onInsert()** method is a trigger function that can be attached to a queue. The function will receive the inserted value. A common use case for the **onInsert()** trigger is to set the value of a **single** that causes a component
+The <span class="inline-code">onInsert()</span> method is a trigger function that can be attached to a queue. The function will receive the inserted value. A common use case for the <span class="inline-code">onInsert()</span> trigger is to set the value of a <span class="inline-code">single</span> that causes a component
 to rerender and ingest the values in the queue. This is required because queues themselves to do not cause your components to rerender.
 
-**Example of onInsert()**
+**Example of <span class="inline-code">onInsert()</span>**
 
 <div className={codeWrapper}>
 ```typescript
@@ -92,4 +92,4 @@ s.queues.eventQueue.onInsert(() => {
 ```
 </div>
 
-In the above example, the **onInsert()** trigger for the queue will notify a **single** that there are pending actions. This **single** can be used in a component that ingests the queue's data when it is available.
+In the above example, the <span class="inline-code">onInsert()</span> trigger for the queue will notify a <span class="inline-code">single</span> that there are pending actions. This <span class="inline-code">single</span> can be used in a component that ingests the queue's data when it is available.

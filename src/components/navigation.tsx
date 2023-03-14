@@ -40,6 +40,15 @@ const StyledNavigation = styled.div`
 
     a[aria-current="page"] {
         font-weight: bold;
+        position: relative;
+    }
+
+    a[aria-current="page"]:before {
+        content: "";
+        border-left: 3px solid var(--purple);
+        position: absolute;
+        left: 0px;
+        height: 20px;
     }
 
     a:hover:not(a[aria-current="page"]) {
@@ -51,12 +60,17 @@ const StyledNavigation = styled.div`
     ul {
         list-style: none;
     }
+
+    @media only screen and (max-width: 800px) {
+        font-size: 1.7rem;
+    }
+
 `;
 
 export function Navigation() {
     return (
         <StyledNavigation>
-            <h1>TRIGGER <sup>v0.7.0 <img src="/lightning.png" /></sup></h1>
+            <h1>TRIGGER <sup>v0.10.0 <img src="/lightning.png" /></sup></h1>
             <nav>
                 <ul>
                     <li><Link to="/">Overview</Link></li>

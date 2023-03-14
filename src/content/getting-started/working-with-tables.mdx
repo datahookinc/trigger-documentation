@@ -5,7 +5,7 @@ import { Link } from 'gatsby';
 
 <Link to="/api#tables">Explore the full Tables API</Link>
 
-Tables are the backbone of **Trigger** and offer unique experiences compared to other React state management libraries.
+Tables are the backbone of Trigger and offer unique experiences compared to other React state management libraries.
 
 To create tables in your store, you first declare the table type, where each property represents a column/attribute/feature in our table:
 
@@ -22,7 +22,7 @@ To create tables in your store, you first declare the table type, where each pro
 </div>
 
 
-In **Trigger**, your tables must be "flat". This means table values can only be of the following types:
+In Trigger, your tables must be "flat". This means table values can only be of the following types:
 
 * string
 * number
@@ -30,14 +30,14 @@ In **Trigger**, your tables must be "flat". This means table values can only be 
 * boolean
 * null
 
-When you insert a row into a table, trigger will automatically handle assigning the "_\_pk_"  value to your rows. If you need to store nested objects, you have two options:
+When you insert a row into a table, trigger will automatically handle assigning the <span class="inline-code">\_pk</span>  value to your rows. If you need to store nested objects, you have two options:
 
 1. Redefine the nested nature of your objects as flat tables with properties (columns) you can use to relate to one another
-2. Use **Trigger**'s **Singles** data type, which allows any kind of data to be stored
+2. Use Trigger's <span class="inline-code">Singles</span> data type, which allows any kind of data to be stored
 
-**Trigger** will use our table types to improve the developer experience as you interact with your store.
+Trigger will use our table types to improve the developer experience as you interact with your store.
 
-Once you have created your table type, you can add it to your store type under the **tables** property:
+Once you have created your table type, you can add it to your store type under the <span class="inline-code">tables</span> property:
 
 <div className={codeWrapper}>
     ```typescript
@@ -64,11 +64,11 @@ Finally, you create your store with the types you have declared and export the t
     ```
 </div>
 
-The **CreateTable** function provides the functionality **Trigger** uses to manage your table. A couple of points worth noting when calling **CreateTable**:
+The <span class="inline-code">CreateTable</span> function provides the functionality Trigger uses to manage your table. A couple of points worth noting when calling <span class="inline-code">CreateTable</span>:
 
 * You must pass **all** properties for your table
 * You can pass empty arrays, or you can prepopulate the arrays with values
-* If you prepopulate the arrays with values, all arrays must contain the same number of elements or **Trigger** will throw an error
+* If you prepopulate the arrays with values, all arrays must contain the same number of elements or Trigger will throw an error
 
 Declaring our table types and store types are important because they provide an improved developer experience across your application. To use your table in your application, 
 you simply import the **tables** value and use the namespaced table:
@@ -80,7 +80,7 @@ you simply import the **tables** value and use the namespaced table:
     import import { tables } from './store';
 
     function MyComponent() {
-        const rows = tables.activeTasks.use(null);
+        const rows = tables.activeTasks.use();
 
         return (
             <div>
@@ -91,28 +91,28 @@ you simply import the **tables** value and use the namespaced table:
     ```
 </div>
 
-Behind the scenes, **Trigger** will assign a unique, sequential primary key column to each of your tables. This property is accessed as "_\_pk_" and provides many conveniences for the internal functions of **Trigger**, and can
-be used in your application to uniquely identify each row. For instance, the "_\_pk_" property is a great candidate for the **key** property when creating lists in React.
+Behind the scenes, Trigger will assign a unique, sequential primary key column to each of your tables. This property is accessed as <span class="inline-code">\_pk</span> and provides many conveniences for the internal functions of Trigger, and can
+be used in your application to uniquely identify each row. For instance, the <span class="inline-code">\_pk</span> property is a great candidate for the **key** property when creating lists in React.
 
-## **use()** and **useRow()**
+## <span class="inline-code">use()</span> and <span class="inline-code">useRow()</span>
 
-<mark>**Note**: methods starting with **use** will cause your component to rerender. No other method will cause your component to rerender.</mark>
+<mark>**Note**: methods starting with <span class="inline-code">use</span> will cause your component to rerender. No other method will cause your component to rerender.</mark>
 
-With tables, the **use** and **useRow** methods are how you can update your component when changes occur to the table.
+With tables, the <span class="inline-code">use</span> and <span class="inline-code">useRow</span> methods are how you can update your component when changes occur to the table.
 
-The **use** method will return an array of rows matching you **where** predicate and your **notify** list. If your **where** predicate is set to **null**, it means you would like to receive all rows in the table. If your **where** predicate is
-a user-defined function, the function will receive each row in the table individually and the user must return a boolean to determine if the row should be retrieved. The notify list for **use** can accept 
-**rowInsert**, **rowUpdate**, and **rowDelete**.
+The <span class="inline-code">use</span> method will return an array of rows matching you <span class="inline-code">where</span> predicate and your <span class="inline-code">notify</span> list. If your <span class="inline-code">where</span> predicate is set to <span class="inline-code">null</span>, it means you would like to receive all rows in the table. If your <span class="inline-code">where</span> predicate is
+a user-defined function, the function will receive each row in the table individually and the user must return a boolean to determine if the row should be retrieved. The notify list for <span class="inline-code">use</span> can accept 
+<span class="inline-code">rowInsert</span>, <span class="inline-code">rowUpdate</span>, and <span class="inline-code">rowDelete</span>.
 
-* **rowInsert**: any time a new row is inserted in the table, re-render this component
-* **rowUpdate**: any time a row is updated in the table, re-render the component
-* **rowDelete**: any time a row is deleted in the table, re-render the component
+* <span class="inline-code">rowInsert</span>: any time a new row is inserted in the table, re-render this component
+* <span class="inline-code">rowUpdate</span>: any time a row is updated in the table, re-render the component
+* <span class="inline-code">rowDelete</span>: any time a row is deleted in the table, re-render the component
 
-**Examples of **use()**:**
+**Examples of <span class="inline-code">use()</span>:**
 
 ```tsx
 // retrieve all rows from the table, and re-render it every time there is a change to the table
-const rows = use(null);
+const rows = use();
 ```
 
 ```tsx
@@ -128,34 +128,34 @@ const rows = use(v => v.value > 10, ['rowInsert']);
 
 <mark>**Note**: Trigger will compare the current values in your component to the new values to determine if a re-render is required</mark>
 
-The **useRow** method will return a single row or **undefined** for any row that matches the "_\_pk_". In practice, **use** and **useRow** are often used in tandem, where are parent component will pass the "_\_pk_" to child components who
-then subscribe to that row's changes. The notify list for **use** can accept **rowUpdate**, and **rowDelete**.
+The <span class="inline-code">useRow</span> method will return a single row or **undefined** for any row that matches the <span class="inline-code">\_pk</span>. In practice, <span class="inline-code">use</span> and <span class="inline-code">useRow</span> are often used in tandem, where are parent component will pass the <span class="inline-code">\_pk</span> to child components who
+then subscribe to that row's changes. The notify list for <span class="inline-code">use</span> can accept <span class="inline-code">rowUpdate</span>, and <span class="inline-code">rowDelete</span>.
 
-* **rowUpdate**: if the row is updated, re-render the component
-* **rowDelete**: if the row is deleted from the table, re-render the component
+* <span class="inline-code">rowUpdate</span>: if the row is updated, re-render the component
+* <span class="inline-code">rowDelete</span>: if the row is deleted from the table, re-render the component
 
-**Examples of **useRow()**:**
+**Examples of <span class="inline-code">useRow()</span>:**
 
 ```tsx
-// retrieve the row from the table whose "_pk_" property is 10
+// retrieve the row from the table whose "_pk" property is 10
 const row = useRow(10);
 ```
 
 ```tsx
-// retrieve the row from the table whose "_pk_" property is 10,
+// retrieve the row from the table whose "_pk" property is 10,
 // and only re-render the component when the row is deleted
 const row = useRow(10, ['rowDelete']);
 ```
 
-## **get()** and **getRows()**
+## <span class="inline-code">get()</span> and <span class="inline-code">getRows()</span>
 
-The **get()** and **getRows()** methods are similar to **use()** and **useRow()** except they **will not cause your component to rerender**. These methods are handy for when you want to retrieve rows from your store, but you don't
-want to cause a re-render. A common use case for this is to query for a row to retrieve its "_\_pk_" for further use in your application.
+The <span class="inline-code">get()</span> and <span class="inline-code">getRows()</span> methods are similar to <span class="inline-code">use()</span> and <span class="inline-code">useRow()</span> except they **will not cause your component to rerender**. These methods are handy for when you want to retrieve rows from your store, but you don't
+want to cause a re-render. A common use case for this is to query for a row to retrieve its <span class="inline-code">\_pk</span> for further use in your application.
 
-The **getRows()** method will return an array of rows matching you **where** predicate. Your **where** predicate can be an object whose properties are the columns in your table and values are those that you want to match, or a
+The <span class="inline-code">getRows()</span> method will return an array of rows matching you <span class="inline-code">where</span> predicate. Your <span class="inline-code">where</span> predicate can be an object whose properties are the columns in your table and values are those that you want to match, or a
 user-defined function that receives each entry in the table individually and the user must return a boolean to determine if the row should be retrieved. If no entries are found, the function will return an empty array.
 
-**Examples of getRows():**
+**Examples of <span class="inline-code">getRows()</span>:**
 
 ```tsx
 // retrieve all rows in the table where the "firstName" property is set to "Ada"
@@ -167,14 +167,14 @@ const rows = getRows({ firstName: 'Ada' });
 const rows = getRows(v => v.ownerID > 10);
 ```
 
-The **getRow()** method will return the first row that matches your **where** predicate. Your **where** predicate can be a primary key ("_\_pk_"), an object whose properties are the columns in your table and values
+The <span class="inline-code">getRow()</span> method will return the first row that matches your <span class="inline-code">where</span> predicate. Your <span class="inline-code">where</span> predicate can be a primary key (<span class="inline-code">\_pk</span>), an object whose properties are the columns in your table and values
 are those that you want to match, or a user-defined function that receives each entry in the table individually and the user must return a boolean to determine if the row should be retrieved.
 If no entries are found, the function will return undefined.
 
-**Examples of getRow():**
+**Examples of <span class="inline-code">getRow()</span>:**
 
 ```tsx
-// retrieve the row from the table whose "_pk_" property is 10
+// retrieve the row from the table whose "_pk" property is 10
 const row = getRow(10);
 ```
 

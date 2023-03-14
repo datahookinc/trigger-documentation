@@ -5,13 +5,13 @@ import { Link } from 'gatsby';
 
 <Link to="/api#singles">Explore the full Singles API</Link>
 
-Singles are single variables that **Trigger** will manage on your behalf. A single could be a simple value, like a number, or a complex nested object. Singles help bridge the gap between
-storing your data in a data-oriented manner and the customary approach of storing your state in nested objects. Quite often, **Singles** are used to provide UI state, while **Tables** are used
+Singles are single variables that Trigger will manage on your behalf. A single could be a simple value, like a number, or a complex nested object. Singles help bridge the gap between
+storing your data in a data-oriented manner and the customary approach of storing your state in nested objects. Quite often, <span class="inline-code">Singles</span> are used to provide UI state, while <span class="inline-code">Tables</span> are used
 to provide data state.
 
 Singles have a simplistic API, which allows getting, setting, and using the value stored in your single.
 
-To create a single, use the **Single\<T\>** type declaration and it to our **store**:
+To create a single, use the <span class="inline-code">Single\<T\></span> type declaration and it to our <span class="inline-code">store</span>:
 
 <div className={codeWrapper}>
 ```typescript
@@ -32,7 +32,7 @@ interface MyStore extends Store {
 ```
 </div>
 
-Notice above how **activeUser** is a an object, while **pendingActions** is a primitive value. **Singles** will allow you to manage nested, hierarhical objects as needed.
+Notice above how **activeUser** is a an object, while **pendingActions** is a primitive value. <span class="inline-code">Singles</span> will allow you to manage nested, hierarhical objects as needed.
 
 With our types declared, we can now instantiate our store with our Singles and extract them for use in our application:
 
@@ -50,7 +50,7 @@ export const { singles } = extract(s);
 ```
 </div>
 
-To use your single in your application, you simply import the **singles** value and use the namespaced single name:
+To use your single in your application, you simply import the <span class="inline-code">singles</span> value and use the namespaced single name:
 
 <span style={{ fontFamily: 'monospace'}}>component.tsx</span>
 
@@ -70,13 +70,13 @@ function MyComponent() {
 ```
 </div>
 
-## use() and set()
+## <span class="inline-code">use()</span>, <span class="inline-code">set()</span> and <span class="inline-code">setFn()</span>
 
-<mark>**Note**: methods starting with **"use"** will cause your component to rerender. No other method will cause your component to rerender.</mark>
+<mark>**Note**: methods starting with <span class="inline-code">use</span> will cause your component to rerender. No other method will cause your component to rerender.</mark>
 
-The **use()** method will cause your component rerender whenever the underlying value changes. The new value will be returned to your component.
+The <span class="inline-code">use()</span> method will cause your component rerender whenever the underlying value changes. The new value will be returned to your component.
 
-**Example of use():**
+**Example of <span class="inline-code">use()</span>:**
 
 ```typescript
 // retrieve the current value stored in `activeUser` and
@@ -84,21 +84,31 @@ The **use()** method will cause your component rerender whenever the underlying 
 const currentValue = singles.activeUser.use();
 ```
 
-**Example of set():**
+**Example of <span class="inline-code">set()</span>:**
 
 ```typescript
 // set the `activeUser` with a new value for the "name" property
 singles.activeUser.set({ ...currentValue, name: 'New Name' })
 ```
 
-To change the value in your **singles**, you call the **set()** method with the new value. **Trigger** uses equality comparisons (===) to determine if the underlying value has changed. So, if your underlying value is an
-object (like an array) you should call **set** with a new reference to the object (e.g., **set([...oldArr, newValue])**).
+To change the value in your <span class="inline-code">singles</span>, you call the <span class="inline-code">set()</span> method with the new value. Trigger uses equality comparisons (===) to determine if the underlying value has changed. So, if your underlying value is an
+object (like an array) you should call <span class="inline-code">set</span> with a new reference to the object (e.g., <span class="inline-code">set([...oldArr, newValue])</span>).
 
-## get()
+**Example of <span class="inline-code">setFn()</span>:**
 
-The **get()** method is similar to the **use()** method except it <u>**will not cause your component to re-render**</u>. This can be handy when you want to retrieve the value from your store, but don't want to cause a rerender.
+```typescript
+// set the `activeUser` with a new value for the "name" property
+singles.activeUser.setFn(cv => ({ ...cv, name: 'New Name' }))
+```
 
-**Example of get():**
+To change the value of your <span class="inline-code">single</span> based on its existing value, you call the <span class="inline-code">setFn()</span> method. This method allows you to pass a function that receives the current value and returns the new value. This ensures there is
+no race condition when changing the value.
+
+## <span class="inline-code">get()</span>
+
+The <span class="inline-code">get()</span> method is similar to the <span class="inline-code">use()</span> method except it <u>**will not cause your component to re-render**</u>. This can be handy when you want to retrieve the value from your store, but don't want to cause a rerender.
+
+**Example of <span class="inline-code">get()</span>:**
 
 ```typescript
 // get the current value without causing a rerender

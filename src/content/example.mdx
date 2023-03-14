@@ -47,12 +47,12 @@ Starting by creating a file for your store (e.g., **store.ts**) and adding the f
 
 <br />
 
-<mark>**Note:** We are using a **single** called **initialLoad** to ensure we don't load data into our store multiple times</mark>
+<mark>**Note:** We are using a <span class="inline-code">single</span> called <span class="inline-code">initialLoad</span> to ensure we don't load data into our store multiple times</mark>
 
 ### INSTANTIATE OUR STORE
 
-With our types declared, we now instantitate our store and export it for use throughout our application. You can do this in the same file where you declared your types. Start by importing the **CreateTable** and **extract**
-convenience functions from the library, then creating a property called **tables** in your store object with empty arrays to hold your data.
+With our types declared, we now instantitate our store and export it for use throughout our application. You can do this in the same file where you declared your types. Start by importing the <span class="inline-code">CreateTable</span> and <span class="inline-code">extract</span>
+convenience functions from the library, then creating a property called <span class="inline-code">tables</span> in your store object with empty arrays to hold your data.
 
 <span style={{ fontFamily: 'monospace'}}>store.ts</span>
 
@@ -209,7 +209,7 @@ The final version of our store is shown below, and is now ready for use in our a
     export default function TaskOwners() {
         const activeTasks = tables.activeTasks.use(null, ['rowDelete', 'rowInsert']);
         const completedTasks = tables.completedTasks.use(null, ['rowDelete', 'rowInsert']);
-        const owners = tables.taskOwners.use(null);
+        const owners = tables.taskOwners.use();
 
         return (
             <div className={table}>
@@ -248,7 +248,7 @@ The final version of our store is shown below, and is now ready for use in our a
 
     // Will show the active tasks
     export default function ActiveTasks() {
-        const tasks = tables.activeTasks.use(null);
+        const tasks = tables.activeTasks.use();
 
         const handleCompleteTask = (pk: number) => {
             const task = tables.activeTasks.getRow(pk);
@@ -295,7 +295,7 @@ The final version of our store is shown below, and is now ready for use in our a
 
     // Will show the completed tasks
     export default function CompletedTasks() {
-        const tasks = tables.completedTasks.use(null);
+        const tasks = tables.completedTasks.use();
 
         const handleActivateTask = (pk: number) => {
             const task = tables.completedTasks.getRow(pk);

@@ -8,8 +8,12 @@ const StyledContent = styled.main`
     width: 100%;
     height: calc(100vh - 35px);
 
-    @media only screen and (max-width: 600px) {
-        display: block;       
+    @media only screen and (max-width: 800px) {
+        display: block;
+
+        h1 {
+            text-align: center;
+        }
     }
 `;
 
