@@ -48,7 +48,7 @@ const StyledNavigation = styled.div`
         border-left: 3px solid var(--purple);
         position: absolute;
         left: 0px;
-        height: 20px;
+        height: 22px;
     }
 
     a:hover:not(a[aria-current="page"]) {
@@ -70,7 +70,7 @@ const StyledNavigation = styled.div`
 export function Navigation() {
     return (
         <StyledNavigation>
-            <h1>TRIGGER <sup>v0.10.0 <img src="/lightning.png" /></sup></h1>
+            <h1>TRIGGER <sup>v0.13.0 <img src="/lightning.png" /></sup></h1>
             <nav>
                 <ul>
                     <li><Link to="/">Overview</Link></li>

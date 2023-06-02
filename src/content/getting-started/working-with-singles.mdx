@@ -1,9 +1,10 @@
 import { codeWrapper } from '../../example/example.module.css';
 import { Link } from 'gatsby';
+import { StyledLink } from '../../components/Styles';
 
 # Working with Singles
 
-<Link to="/api#singles">Explore the full Singles API</Link>
+<Link to="/api#single"><StyledLink>Explore the full Singles API</StyledLink></Link>
 
 Singles are single variables that Trigger will manage on your behalf. A single could be a simple value, like a number, or a complex nested object. Singles help bridge the gap between
 storing your data in a data-oriented manner and the customary approach of storing your state in nested objects. Quite often, <span class="inline-code">Singles</span> are used to provide UI state, while <span class="inline-code">Tables</span> are used
@@ -56,7 +57,7 @@ To use your single in your application, you simply import the <span class="inlin
 
 <div className={codeWrapper}>
 ```tsx
-import import { singles } from './store';
+import { singles } from './store';
 
 function MyComponent() {
     const user = singles.activeUser.use();

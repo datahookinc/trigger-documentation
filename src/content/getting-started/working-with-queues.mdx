@@ -1,9 +1,10 @@
 import { codeWrapper } from '../../example/example.module.css';
 import { Link } from 'gatsby';
+import { StyledLink } from '../../components/Styles';
 
 # Working with Queues
 
-<Link to="/api#queues">Explore the full Queues API</Link>
+<Link to="/api#queue"><StyledLink>Explore the full Queues API</StyledLink></Link>
 
 Queues are a managed data structure, similar to an array, that allow you to insert and retrieve items. Queues **will not** cause your components to re-render. Think of them as a safe way to
 interact with a queue across your components.

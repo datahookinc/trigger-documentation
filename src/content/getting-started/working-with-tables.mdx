@@ -1,9 +1,10 @@
 import { codeWrapper } from '../../example/example.module.css';
 import { Link } from 'gatsby';
+import { StyledLink } from '../../components/Styles';
 
 # Working with Tables
 
-<Link to="/api#tables">Explore the full Tables API</Link>
+<Link to="/api#table"><StyledLink>Explore the full Tables API</StyledLink></Link>
 
 Tables are the backbone of Trigger and offer unique experiences compared to other React state management libraries.
 
@@ -77,7 +78,7 @@ you simply import the **tables** value and use the namespaced table:
 
 <div className={codeWrapper}>
     ```tsx
-    import import { tables } from './store';
+    import { tables } from './store';
 
     function MyComponent() {
         const rows = tables.activeTasks.use();

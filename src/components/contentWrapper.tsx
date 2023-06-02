@@ -13,7 +13,7 @@ const StyledContentWrapper = styled.section`
     .inner {
         padding-left: 20px;
         padding-right: 20px;
-        padding-bottom: 20px;
+        padding-bottom: 40px;
         max-width: 1200px;
         margin-left: auto;
         margin-right: auto;
