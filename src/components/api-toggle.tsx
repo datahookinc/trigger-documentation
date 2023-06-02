@@ -34,7 +34,7 @@ export const ToggleComponent = ({ component, setComponent }: Props) => {
     ) => {
         // only trigger changes if the user selects a different toggle
         if (newSelection !== null) {
-            history.replaceState(undefined, '', `#${newSelection}`);
+            globalThis.history && globalThis.history.replaceState(undefined, '', `#${newSelection}`);
             setComponent(newSelection);
         }
     };
