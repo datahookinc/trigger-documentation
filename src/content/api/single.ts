@@ -32,7 +32,7 @@ const isLoading = singles.isLoading.get();`,
         },
         {
             name: 'set()',
-            description: `Sets the value for the single. Trigger uses strict reference comparisons (===) to determine if the underlying value has changed. So, if your underlying value is an object (like an array) you should call <span class="inline-code api-inline">set()</span> with a new reference to the array (e.g., <span class="inline-code api-inline">set([...oldArr, newValue]))</span>. Will rerender all components that are subscribed to <span class="inline-code api-inline>use()</span>.`,
+            description: `Sets the value for the single. Trigger uses strict reference comparisons (===) to determine if the underlying value has changed. So, if your underlying value is an object (like an array) you should call <span class="inline-code api-inline">set()</span> with a new reference to the array (e.g., <span class="inline-code api-inline">set([...oldArr, newValue]))</span>. Will rerender all components that are subscribed to <span class="inline-code api-inline">use()</span>.`,
             signature: `set(newValue: T): T`,
             parameters: [
                 {
