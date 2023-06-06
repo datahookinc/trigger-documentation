@@ -456,7 +456,7 @@ const columns = tables.cats.getColumnNames();`,
         },
         {
             name: 'print()',
-            description: `Prints the specified table to the console to view its contents`,
+            description: `Prints the specified table to the console to view its contents. Some browsers require the developer console to be open for the table to print; otherwise, an object will be logged instead. You can copy this object and manually type console.table(<paste object>) into the console if needed.`,
             signature: `print(where?: Partial<T> | ((row: TableRow<T>) => boolean) | null, n?: number): void`,
             parameters: [
                 {
