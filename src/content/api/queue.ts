@@ -54,7 +54,7 @@ queues.events.onInsert(newItem => {
         {
             name: 'get()',
             description: `Will retrieve the item at the head of the queue.`,
-            signature: `get(): QueueItem<T> | undefined`,
+            signature: `get(): T | undefined`,
             parameters: [],
             returns: 'The item at the head of the queue, or <span class="inline-code api-inline">undefined</span> if the queue is currently empty.',
             examples: [
