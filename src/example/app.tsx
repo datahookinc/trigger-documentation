@@ -6,8 +6,8 @@ import CheckCircle from '@mui/icons-material/CheckCircle';
 
 // Will show how may active and completed tasks for each owner
 function TaskOwners() {
-    const activeTasks = tables.activeTasks.use(null, ['rowDelete', 'rowInsert']);
-    const completedTasks = tables.completedTasks.use(null, ['rowDelete', 'rowInsert']);
+    const activeTasks = tables.activeTasks.use(null, ['onDelete', 'onInsert']);
+    const completedTasks = tables.completedTasks.use(null, ['onDelete', 'onInsert']);
     const owners = tables.taskOwners.use();
 
     return (
@@ -24,7 +24,7 @@ function TaskOwners() {
                     </thead>
                     <tbody>
                         {owners.map(o =>
-                            <tr key={o._pk}>
+                            <tr key={o._id}>
                                 <td>{o.firstName} {o.lastName}</td>
                                 <td>{activeTasks.filter(d => d.ownerID === o.ownerID).length}</td>
                                 <td>{completedTasks.filter(d => d.ownerID === o.ownerID).length}</td>
@@ -41,11 +41,11 @@ function TaskOwners() {
 function ActiveTasks() {
     const tasks = tables.activeTasks.use();
 
-    const handleCompleteTask = (pk: number) => {
-        const task = tables.activeTasks.getRow(pk);
+    const handleCompleteTask = (_id: number) => {
+        const task = tables.activeTasks.findById(_id);
         if (task) {
-            tables.activeTasks.deleteRow(pk);
-            tables.completedTasks.insertRow({ ownerID: task.ownerID, description: task.description });
+            tables.activeTasks.deleteById(_id);
+            tables.completedTasks.insertOne({ ownerID: task.ownerID, description: task.description });
         }
     }
 
@@ -63,10 +63,10 @@ function ActiveTasks() {
                     </thead>
                     <tbody>
                         {tasks.map(t =>
-                            <tr key={t._pk}>
-                                <td>{tables.taskOwners.getRow({ ownerID: t.ownerID})!.firstName} {tables.taskOwners.getRow({ ownerID: t.ownerID})!.lastName}</td>
+                            <tr key={t._id}>
+                                <td>{tables.taskOwners.findOne({ ownerID: t.ownerID})!.firstName} {tables.taskOwners.findOne({ ownerID: t.ownerID})!.lastName}</td>
                                 <td>{t.description}</td>
-                                <td className={icon} title="Click to complete task" onClick={() => handleCompleteTask(t._pk)}><CheckCircle color="success" fontSize="large"/></td>
+                                <td className={icon} title="Click to complete task" onClick={() => handleCompleteTask(t._id)}><CheckCircle color="success" fontSize="large"/></td>
                             </tr>
                         )}
                     </tbody>
@@ -80,11 +80,11 @@ function ActiveTasks() {
 function CompletedTasks() {
     const tasks = tables.completedTasks.use();
 
-    const handleActivateTask = (pk: number) => {
-        const task = tables.completedTasks.getRow(pk);
+    const handleActivateTask = (_id: number) => {
+        const task = tables.completedTasks.findById(_id);
         if (task) {
-            tables.completedTasks.deleteRow(pk);
-            tables.activeTasks.insertRow({ ownerID: task.ownerID, description: task.description });
+            tables.completedTasks.deleteById(_id);
+            tables.activeTasks.insertOne({ ownerID: task.ownerID, description: task.description });
         }
     }
 
@@ -102,10 +102,10 @@ function CompletedTasks() {
                 </thead>
                 <tbody>
                     {tasks.map(t =>
-                        <tr key={t._pk}>
-                            <td>{tables.taskOwners.getRow({ ownerID: t.ownerID})!.firstName} {tables.taskOwners.getRow({ ownerID: t.ownerID})!.lastName}</td>
+                        <tr key={t._id}>
+                            <td>{tables.taskOwners.findOne({ ownerID: t.ownerID})!.firstName} {tables.taskOwners.findOne({ ownerID: t.ownerID})!.lastName}</td>
                             <td>{t.description}</td>
-                            <td className={icon} title="Click to activate task" onClick={() => handleActivateTask(t._pk)}><Cancel color="error" fontSize="large"/></td>
+                            <td className={icon} title="Click to activate task" onClick={() => handleActivateTask(t._id)}><Cancel color="error" fontSize="large"/></td>
                         </tr>
                     )}
                 </tbody>
@@ -121,7 +121,7 @@ export default function App() {
         if (initialLoad) {
             singles.initialLoad.set(false);
             // Seed our owners
-            tables.taskOwners.insertRows([
+            tables.taskOwners.insertMany([
                 {
                     ownerID: 1,
                     firstName: 'Bill',
@@ -145,7 +145,7 @@ export default function App() {
             ]);
     
             // Create our active tasks
-            tables.activeTasks.insertRows([
+            tables.activeTasks.insertMany([
                 {
                     ownerID: 1,
                     description: 'Invent Internet Explorer',

@@ -30,7 +30,7 @@ Here is an example store:
     // create the store
     const s: MyStore = {
         tables: {
-            person: CreateTable<Person>({ id: [], name: [], age: []}),
+            person: CreateTable<Person>(['id', 'name', 'age']),
         },
     };
 
@@ -75,7 +75,7 @@ If our table had <span class="inline-code">singles</span> and <span class="inlin
     // create the store
     const s: MyStore = {
         tables: {
-            person: CreateTable<Person>({ id: [], name: [], age: []}),
+            person: CreateTable<Person>(['id', 'name', 'age']),
         },
         singles: {
             activeTab: CreateSingle<number>(0),

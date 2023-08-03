@@ -85,7 +85,7 @@ singles.isLoading.setFn(currentValue => currentValue + 1);`,
                 `// each time the single changes add an entry to an events table
 import { singles, tables } from './store';
 singles.isLoading.onSet(newValue => {
-    tables.events.insertRow({ timestamp: Date.now(), event: 'set single', value: newValue });
+    tables.events.insertOne({ timestamp: Date.now(), event: 'set single', value: newValue });
 });`,
             ],
         },

@@ -41,6 +41,10 @@ const StyledList = styled.ul`
             font-size: 0.6em;
             vertical-align: middle;
         }
+
+        .p-code {
+            font-size: 0.9em
+        }
     }
 `;
 
@@ -87,11 +91,11 @@ export default function API() {
                                 <StyledList>
                                     {v.parameters.map(p =>
                                         <li key={p.name}>
-                                            { p.optional && <span className="p-optional">(optional) </span>}
                                             <span className="p-name">{p.name} </span>
+                                            { p.optional && <span className="p-optional">(optional) </span>}
                                             <span className="p-bracket"> (</span>
                                             <span>
-                                                <code style={{ fontSize: '0.9em' }}>
+                                                <code className="p-code">
                                                     {p.type}
                                                 </code>
                                             </span>

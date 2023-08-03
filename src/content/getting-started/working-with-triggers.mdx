@@ -75,7 +75,7 @@ const s: MyStore = {
 };
 
 s.tables.customers.onAfterInsert(v => {
-    s.tables.orders.insertRow({ orderID: 100, customerID: v.customerID, orderDate: new Date(), orderLocation: '' });
+    s.tables.orders.insertOne({ orderID: 100, customerID: v.customerID, orderDate: new Date(), orderLocation: '' });
 });
 ```
 </div>

@@ -31,7 +31,7 @@ In Trigger, your tables must be "flat". This means table values can only be of t
 * boolean
 * null
 
-When you insert a row into a table, trigger will automatically handle assigning the <span class="inline-code">\_pk</span>  value to your rows. If you need to store nested objects, you have two options:
+When you insert a row into a table, trigger will automatically handle assigning the <span class="inline-code">\_id</span>  value to your rows. If you need to store nested objects, you have two options:
 
 1. Redefine the nested nature of your objects as flat tables with properties (columns) you can use to relate to one another
 2. Use Trigger's <span class="inline-code">Singles</span> data type, which allows any kind of data to be stored
@@ -50,13 +50,13 @@ Once you have created your table type, you can add it to your store type under t
     ```
 </div>
 
-Finally, you create your store with the types you have declared and export the table for use in your application:
+Finally, you create your store with the types you have declared and export the table for use in your application. When creating the table, you pass an array of column names for your table that match the keys in your type:
 
 <div className={codeWrapper}>
     ```typescript
     const s: MyStore = {
         tables: {
-            taskOwners: CreateTable<TaskOwner>({ ownerID: [], firstName: [], lastName: [], }),
+            taskOwners: CreateTable<TaskOwner>(['ownerID', 'firstName', 'lastName']),
         },
     };
 
@@ -92,99 +92,101 @@ you simply import the **tables** value and use the namespaced table:
     ```
 </div>
 
-Behind the scenes, Trigger will assign a unique, sequential primary key column to each of your tables. This property is accessed as <span class="inline-code">\_pk</span> and provides many conveniences for the internal functions of Trigger, and can
-be used in your application to uniquely identify each row. For instance, the <span class="inline-code">\_pk</span> property is a great candidate for the **key** property when creating lists in React.
+Behind the scenes, Trigger will assign a unique, sequential <span class="inline-code">\_id</span> column to each of your tables. This property is accessed as <span class="inline-code">\_id</span> and provides many conveniences for the internal functions of Trigger, and can
+be used in your application to uniquely identify each row. For instance, the <span class="inline-code">\_id</span> property is a great candidate for the **key** property when creating lists in React.
 
-## <span class="inline-code">use()</span> and <span class="inline-code">useRow()</span>
+## <span class="inline-code">use()</span> and <span class="inline-code">useById()</span>
 
 <mark>**Note**: methods starting with <span class="inline-code">use</span> will cause your component to rerender. No other method will cause your component to rerender.</mark>
 
-With tables, the <span class="inline-code">use</span> and <span class="inline-code">useRow</span> methods are how you can update your component when changes occur to the table.
+With tables, the <span class="inline-code">use</span> and <span class="inline-code">useById</span> methods are how you can update your component when changes occur to the table.
 
 The <span class="inline-code">use</span> method will return an array of rows matching you <span class="inline-code">where</span> predicate and your <span class="inline-code">notify</span> list. If your <span class="inline-code">where</span> predicate is set to <span class="inline-code">null</span>, it means you would like to receive all rows in the table. If your <span class="inline-code">where</span> predicate is
 a user-defined function, the function will receive each row in the table individually and the user must return a boolean to determine if the row should be retrieved. The notify list for <span class="inline-code">use</span> can accept 
-<span class="inline-code">rowInsert</span>, <span class="inline-code">rowUpdate</span>, and <span class="inline-code">rowDelete</span>.
+<span class="inline-code">insert</span>, <span class="inline-code">update</span>, and <span class="inline-code">delete</span>.
 
-* <span class="inline-code">rowInsert</span>: any time a new row is inserted in the table, re-render this component
-* <span class="inline-code">rowUpdate</span>: any time a row is updated in the table, re-render the component
-* <span class="inline-code">rowDelete</span>: any time a row is deleted in the table, re-render the component
+* <span class="inline-code">insert</span>: any time a new row is inserted in the table, re-render this component
+* <span class="inline-code">update</span>: any time a row is updated in the table, re-render the component
+* <span class="inline-code">delete</span>: any time a row is deleted in the table, re-render the component
 
 **Examples of <span class="inline-code">use()</span>:**
 
 ```tsx
 // retrieve all rows from the table, and re-render it every time there is a change to the table
-const rows = use();
+const rows = tables.activeTasks.use();
 ```
 
 ```tsx
 // retrieve all rows from the table, and re-render it every time a row is inserted or deleted
-const rows = use(null, ['rowInsert', 'rowDelete']);
+const rows = tables.activeTasks.use(null, ['onInsert', 'onDelete']);
 ```
 
 ```tsx
 // retrieve only rows from the table where the "value" property is greater than 10,
 // and re-render it every time a row is inserted.
-const rows = use(v => v.value > 10, ['rowInsert']);
+const rows = tables.activeTasks.use(v => v.value > 10, ['onInsert']);
 ```
 
 <mark>**Note**: Trigger will compare the current values in your component to the new values to determine if a re-render is required</mark>
 
-The <span class="inline-code">useRow</span> method will return a single row or **undefined** for any row that matches the <span class="inline-code">\_pk</span>. In practice, <span class="inline-code">use</span> and <span class="inline-code">useRow</span> are often used in tandem, where are parent component will pass the <span class="inline-code">\_pk</span> to child components who
-then subscribe to that row's changes. The notify list for <span class="inline-code">use</span> can accept <span class="inline-code">rowUpdate</span>, and <span class="inline-code">rowDelete</span>.
+The <span class="inline-code">useById</span> method will return a single row or **undefined** for any row that matches the <span class="inline-code">\_id</span>. In practice, <span class="inline-code">use</span> and <span class="inline-code">useById</span> are often used in tandem, where are parent component will pass the <span class="inline-code">\_id</span> to child components who
+then subscribe to that row's changes. The notify list for <span class="inline-code">use</span> can accept <span class="inline-code">onUpdate</span>, and <span class="inline-code">onDelete</span>.
 
-* <span class="inline-code">rowUpdate</span>: if the row is updated, re-render the component
-* <span class="inline-code">rowDelete</span>: if the row is deleted from the table, re-render the component
+* <span class="inline-code">onUpdate</span>: if the row is updated, re-render the component
+* <span class="inline-code">onDelete</span>: if the row is deleted from the table, re-render the component
 
-**Examples of <span class="inline-code">useRow()</span>:**
+**Examples of <span class="inline-code">useById()</span>:**
 
 ```tsx
-// retrieve the row from the table whose "_pk" property is 10
-const row = useRow(10);
+// retrieve the row from the table whose "_id" property is 10
+const row = tables.activeTasks.useById(10);
 ```
 
 ```tsx
-// retrieve the row from the table whose "_pk" property is 10,
+// retrieve the row from the table whose "_id" property is 10,
 // and only re-render the component when the row is deleted
-const row = useRow(10, ['rowDelete']);
+const row = tables.activeTasks.useById(10, ['onDelete']);
 ```
 
-## <span class="inline-code">get()</span> and <span class="inline-code">getRows()</span>
+## <span class="inline-code">find()</span>, <span class="inline-code">findOne()</span> and <span class="inline-code">findById()</span>
 
-The <span class="inline-code">get()</span> and <span class="inline-code">getRows()</span> methods are similar to <span class="inline-code">use()</span> and <span class="inline-code">useRow()</span> except they **will not cause your component to rerender**. These methods are handy for when you want to retrieve rows from your store, but you don't
-want to cause a re-render. A common use case for this is to query for a row to retrieve its <span class="inline-code">\_pk</span> for further use in your application.
+The <span class="inline-code">find()</span>, <span class="inline-code">findOne()</span> and <span class="inline-code">findById()</span> methods are similar to <span class="inline-code">use()</span> and <span class="inline-code">useById()</span> except they **will not cause your component to rerender**. These methods are handy for when you want to retrieve rows from your store, but you don't
+want to cause a re-render.
 
-The <span class="inline-code">getRows()</span> method will return an array of rows matching you <span class="inline-code">where</span> predicate. Your <span class="inline-code">where</span> predicate can be an object whose properties are the columns in your table and values are those that you want to match, or a
+The <span class="inline-code">find()</span> method will return an array of rows matching your <span class="inline-code">where</span> predicate. Your <span class="inline-code">where</span> predicate can be an object whose properties are the columns in your table and values are those that you want to match, or a
 user-defined function that receives each entry in the table individually and the user must return a boolean to determine if the row should be retrieved. If no entries are found, the function will return an empty array.
 
-**Examples of <span class="inline-code">getRows()</span>:**
+**Examples of <span class="inline-code">find()</span>:**
 
 ```tsx
 // retrieve all rows in the table where the "firstName" property is set to "Ada"
-const rows = getRows({ firstName: 'Ada' });
+const rows = tables.activeTasks.find({ firstName: 'Ada' });
 ```
 
 ```tsx
 // retrive all rows in the table where the "ownerID" is greater than 10.
-const rows = getRows(v => v.ownerID > 10);
+const rows = tables.activeTasks.find(v => v.ownerID > 10);
 ```
 
-The <span class="inline-code">getRow()</span> method will return the first row that matches your <span class="inline-code">where</span> predicate. Your <span class="inline-code">where</span> predicate can be a primary key (<span class="inline-code">\_pk</span>), an object whose properties are the columns in your table and values
-are those that you want to match, or a user-defined function that receives each entry in the table individually and the user must return a boolean to determine if the row should be retrieved.
-If no entries are found, the function will return undefined.
+The <span class="inline-code">findOne()</span> method is the same as the <span class="inline-code">find()</span> method, except it will only return the first row that is found, or <span class="inline-code">undefined</span> if no row matches your <span class="inline-code">where</span> predicate. Omitting the <span class="inline-code">where</span> predicate will return the first row in the table.
 
-**Examples of <span class="inline-code">getRow()</span>:**
+**Examples of <span class="inline-code">findOne()</span>:**
 
 ```tsx
-// retrieve the row from the table whose "_pk" property is 10
-const row = getRow(10);
-```
-
-```tsx
-// retrieve the first row in the table where the "firstName" property is set to "Ada"
-const row = getRow({ firstName: 'Ada' });
+// retrieve the first row in the table where "firstName" property is set to "Ada"
+const row = tables.activeTasks.findOne({ firstName: 'Ada' });
 ```
 
 ```tsx
 // retrieve the first row in the table where the "ownerID" is greater than 10.
-const row = getRow(v => v.ownerID > 10);
+const row = tables.activeTasks.findOne(v => v.ownerID > 10);
+```
+
+The <span class="inline-code">findById()</span> method will return the row matching the provided <span class="inline-code">_id</span> predicate. Your <span class="inline-code">where</span> predicate can be an (<span class="inline-code">\_id</span>).
+
+**Examples of <span class="inline-code">findById()</span>:**
+
+```tsx
+// retrieve the row from the table whose "_id" property is 10
+const row = tables.activeTasks.findById(10);
 ```

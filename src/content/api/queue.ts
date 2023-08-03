@@ -47,7 +47,7 @@ queues.events.insert({ eventname: 'save' });`,
                 `// each time an item is added to the queue add an entry to an events table
 import { queues, tables } from './store';
 queues.events.onInsert(newItem => {
-    tables.events.insertRow({ timestamp: Date.now(), event: 'queue insert', value: newItem });
+    tables.events.insertOne({ timestamp: Date.now(), event: 'queue insert', value: newItem });
 });`,
             ],
         },
