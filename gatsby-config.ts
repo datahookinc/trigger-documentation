@@ -1,4 +1,6 @@
 import type { GatsbyConfig } from "gatsby";
+import dotenv from 'dotenv';
+dotenv.config({ path: '.env' });
 
 const config: GatsbyConfig = {
 	siteMetadata: {
@@ -84,6 +86,24 @@ const config: GatsbyConfig = {
 			},
 			__key: "content",
 		},
+		{
+			resolve: 'gatsby-plugin-google-gtag',
+			options: {
+				trackingIds: [
+					process.env.GATSBY_GA_TRACKING_ID,
+				],
+				gtagConfig: {
+					anonymize_ip: true,
+					cookie_expires: 0,
+				},
+				pluginConfig: {
+					head: false,
+					respectDNT: true,
+					origin: "https://trigger.datahook.ca",
+					delayOnRouteUpdate: 0,
+				}
+			}
+		}
 	]
 };
 
