@@ -99,7 +99,6 @@ const config: GatsbyConfig = {
 				pluginConfig: {
 					head: false,
 					respectDNT: true,
-					origin: "https://trigger.datahook.ca",
 					delayOnRouteUpdate: 0,
 				}
 			}
