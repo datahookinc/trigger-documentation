@@ -134,7 +134,7 @@ export function MyComponent() {
         {
             name: 'find()',
             description: `Retrieves matching rows from the specified table without causing your component to rerender.`,
-            signature: `getRows(where?: Partial<T> | ((v: TableRow<T>) => boolean)): TableRow<T>[]`,
+            signature: `find(where?: Partial<T> | ((v: TableRow<T>) => boolean)): TableRow<T>[]`,
             parameters: [
                 {
                     name: 'where',
@@ -159,7 +159,7 @@ const rows = tables.cats.find(cat => cat.age > 7);`,
         {
             name: 'findOne()',
             description: `Retrieves the first matching row from the specified table without causing your component to rerender.`,
-            signature: `getRow(where?: Partial<T> | ((v: TableRow<T>) => boolean)): TableRow<T> | undefined`,
+            signature: `findOne(where?: Partial<T> | ((v: TableRow<T>) => boolean)): TableRow<T> | undefined`,
             parameters: [
                 {
                     name: 'where',
@@ -172,10 +172,10 @@ const rows = tables.cats.find(cat => cat.age > 7);`,
             examples: [
                 `// returns the first row where the name is "PJ"
 import { tables } from './store';
-const row = tables.cats.getRow({ name: 'PJ' })`,
+const row = tables.cats.findOne({ name: 'PJ' })`,
                 `// returns the first row where the age is greater than 7
 import { tables } from './store';
-const row = tables.cats.getRow(cat => cat.age > 7)`,
+const row = tables.cats.findOne(cat => cat.age > 7)`,
             ],
         },
         {
@@ -225,7 +225,7 @@ const n = tables.cats.count(cat => cat.age > 7);`,
         {
             name: 'insertOne()',
             description: `Inserts a new row into the specified table. The user does not need to provide the <em>_id</em> property as this will be handled automatically. This will return the newly inserted row or <em>undefined</em> if the user has a <span class="inline-code api-inline">beforeInsertTrigger</span> attached to the table that aborts the insert.`,
-            signature: `insertRow(row: T): TableRow<T> | undefined`,
+            signature: `insertOne(row: T): TableRow<T> | undefined`,
             parameters: [
                 {
                     name: 'row',
@@ -330,10 +330,10 @@ tables.cats.onAfterInsert(cat => {
             examples: [
                 `// delete the first cat found with the name "PJ"
 import { tables } from './store';
-tables.cats.deleteRow({ name: 'PJ' });`,
+tables.cats.deleteOne({ name: 'PJ' });`,
                 `// delete the first cat found whose age is > 7
 import { tables } from './store';
-tables.cats.deleteRow(cat => cat.age > 7);`,
+tables.cats.deleteOne(cat => cat.age > 7);`,
             ],
         },
         {

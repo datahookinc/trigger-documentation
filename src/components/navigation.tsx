@@ -51,7 +51,7 @@ const StyledNavigation = styled.div`
         height: 22px;
     }
 
-    a:hover:not(a[aria-current="page"]) {
+    a:hover:not(a[aria-current="page"]):not(.no-link) {
         color: var(--purple);
         cursor: pointer;
         background-color: var(--light-code);
@@ -70,7 +70,7 @@ const StyledNavigation = styled.div`
 export function Navigation() {
     return (
         <StyledNavigation>
-            <h1>TRIGGER <sup>v0.15.2 <img src="/lightning.png" /></sup></h1>
+            <a className="no-link" href="/"><h1>TRIGGER <sup>v0.15.2 <img src="/lightning.png" /></sup></h1></a>
             <nav>
                 <ul>
                     <li><Link to="/">Overview</Link></li>
