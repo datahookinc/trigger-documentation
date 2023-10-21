@@ -71,20 +71,20 @@ singles.isLoading.setFn(currentValue => currentValue + 1);`,
         {
             name: 'onSet()',
             description: `A trigger function that can be attached to a single for each time the value is changed.`,
-            signature: `onSet(fn: (newValue: T) => void): void`,
+            signature: `onSet(fn: (previousValue: T, newValue: T) => void): void`,
             parameters: [
                 {
                     name: 'fn',
                     optional: false,
-                    type: `(newValue: T) => void`,
-                    description: 'a function that receives the new value of the single each time <span class="inline-code api-inline">set()</span> or <span class="inline-code api-inline">setFn()</span> is called',
+                    type: `(previousValue: T, newValue: T) => void`,
+                    description: 'a function that receives the previous value and new value of the single each time <span class="inline-code api-inline">set()</span> or <span class="inline-code api-inline">setFn()</span> is called',
                 }
             ],
             returns: 'Nothing',
             examples: [
                 `// each time the single changes add an entry to an events table
 import { singles, tables } from './store';
-singles.isLoading.onSet(newValue => {
+singles.isLoading.onSet(previousValue, newValue => {
     tables.events.insertOne({ timestamp: Date.now(), event: 'set single', value: newValue });
 });`,
             ],
