@@ -70,7 +70,7 @@ const StyledNavigation = styled.div`
 export function Navigation() {
     return (
         <StyledNavigation>
-            <a className="no-link" href="/"><h1>TRIGGER <sup>v0.15.3 <img src="/lightning.png" /></sup></h1></a>
+            <a className="no-link" href="/"><h1>TRIGGER <sup>v0.15.4 <img src="/lightning.png" /></sup></h1></a>
             <nav>
                 <ul>
                     <li><Link to="/">Overview</Link></li>
