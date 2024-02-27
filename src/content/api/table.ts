@@ -7,13 +7,13 @@ const table: Section = {
         {
             name: 'use()',
             description: `Retrieves rows from the specified table and rerenders your component. If notify is ommitted, the component will rerender for all events on the specified table. Supported notify events are: <span class="inline-code api-inline">'onInsert' | 'onUpdate' | 'onDelete'</span>. If a filtering function is not provided to the <span class="inline-code api-inline">where</span> parameter, this will return all rows in the table.`,
-            signature: `use(where?: ((row: TableRow<T>) => boolean) | null, notify?: ['onInsert' | 'onUpdate' | 'onDelete']): TableRow<T>[]`,
+            signature: `use(where?: Partial<T> | ((row: TableRow<T>) => boolean) | null, notify?: ['onInsert' | 'onUpdate' | 'onDelete']): TableRow<T>[]`,
             parameters: [
                 {
                     name: 'where',
                     optional: true,
-                    type: `(row: TableRow\<T\>) => boolean) | null`,
-                    description: 'accepts a function, null, or undefined. If a function is provided, it will receive each value in the table, allowing you to filter the table as needed. Omitting or passing undefined, will return all rows. Passing null will also return all rows, but it allows you to set the notify parameter',
+                    type: `Partial<T> | (row: TableRow\<T\>) => boolean) | null`,
+                    description: 'receives an object to match rows based on equality of each property value, a function, null, or undefined. If a function is provided, it will receive each value in the table, allowing you to filter the table as needed. Omitting or passing undefined, will return all rows. Passing null will also return all rows, but it allows you to set the notify parameter',
                 },
                 {
                     name: 'notify',
@@ -82,12 +82,12 @@ const row = tables.cats.useById(10, ['onUpdate']);`,
                     description: `
 <ul>
     <li><span class="p-name">refreshOn <span class="p-optional">(optional) </span>(</span><code class="p-code">unknown[]</code><strong>)</strong>: user-provided values that when changed will cause the data to refresh
-    <li></span><span class="p-name">refreshMode <span class="p-optional">(optional) </span>(</span><code class="p-code">'replace' | 'append'</code><strong>)</strong>: default value is 'replace'. When the data is refreshed, 'replace' will remove all existing data and insert the new data, 'append' will keep the existing data and add the new data to the table
-    <li></span><span class="p-name">resetIndex <span class="p-optional">(optional) </span>(</span><code class="p-code">boolean</code><strong>)</strong>: default value is 'false'. Setting to true will reset the table's autoincrementing _id back to 0 when the data is refreshed and the refreshMode is 'replace'
-    <li></span><span class="p-name">notify <span class="p-optional">(optional) </span>(</span><code class="p-code">['onInsert' | 'onUpdate' | 'onDelete']</code><strong>)</strong>: default is to notify for all table events. Allows the user to specify which table events will cause the component to rerender. If omitted, the rows will be retrieved and the component rerendered everytime there is a change to any row in the table.
-    <li></span><span class="p-name">fetchOnMount <span class="p-optional">(optional) </span>(</span><code class="p-code">boolean</code><strong>)</strong>: default value is 'true'. Setting to true will call the query function and load the data each time the component mounts.
-    <li></span><span class="p-name">onSuccess <span class="p-optional">(optional) </span>(</span><code class="p-code">() => void)</code><strong>)</strong>: a function that is fired after the data is successfully loaded. This is convenient for setting a value in your store to indicate the data has already been loaded.
-    <li></span><span class="p-name">filter <span class="p-optional">(optional) </span>(</span><code class="p-code">(row: TableRow<T>) => boolean)</code>)<strong>)</strong>: filters the data returned to the component after all of the data has been loaded to the table.
+    <li><span class="p-name">refreshMode <span class="p-optional">(optional) </span>(</span><code class="p-code">'replace' | 'append'</code><strong>)</strong>: default value is 'replace'. When the data is refreshed, 'replace' will remove all existing data and insert the new data, 'append' will keep the existing data and add the new data to the table
+    <li><span class="p-name">resetIndex <span class="p-optional">(optional) </span>(</span><code class="p-code">boolean</code><strong>)</strong>: default value is 'false'. Setting to true will reset the table's autoincrementing _id back to 0 when the data is refreshed and the refreshMode is 'replace'
+    <li><span class="p-name">notify <span class="p-optional">(optional) </span>(</span><code class="p-code">['onInsert' | 'onUpdate' | 'onDelete']</code><strong>)</strong>: default is to notify for all table events. Allows the user to specify which table events will cause the component to rerender. If omitted, the rows will be retrieved and the component rerendered everytime there is a change to any row in the table.
+    <li><span class="p-name">fetchOnMount <span class="p-optional">(optional) </span>(</span><code class="p-code">boolean</code><strong>)</strong>: default value is 'true'. Setting to true will call the query function and load the data each time the component mounts.
+    <li><span class="p-name">onSuccess <span class="p-optional">(optional) </span>(</span><code class="p-code">() => void)</code><strong>)</strong>: a function that is fired after the data is successfully loaded. This is convenient for setting a value in your store to indicate the data has already been loaded.
+    <li><span class="p-name">filter <span class="p-optional">(optional) </span>(</span><code class="p-code">(row: TableRow<T>) => boolean)</code>)<strong>)</strong>: filters the data returned to the component after all of the data has been loaded to the table.
 <ul>`
                 },
             ],
@@ -195,6 +195,31 @@ const row = tables.cats.findOne(cat => cat.age > 7)`,
                 `// returns the row with a _id of 10
 import { tables } from './store';
 const row = tables.cats.findById(10);`,
+            ],
+        },
+        {
+            name: 'scan()',
+            description: `Retrieves each row in the table one at a time without causing your component to rerender`,
+            signature: `scan(fn: (row: TableRow<T>, i: number) => boolean | void): void`,
+            parameters: [
+                {
+                    name: 'fn',
+                    optional: false,
+                    type: `(row: TableRow<T>, idx: number) => boolean | void`,
+                    description: `a function that receives the next row in the table and zero-based row counter. Return <span class="inline-code api-inline">false</span> if scanning should stop early.`,
+                },
+            ],
+            returns: 'Nothing',
+            examples: [
+                `// return the first three rows in the table
+import { tables } from './store';
+const rows = [];
+tables.cats.scan((cat, i) => {
+    if (i == 3) {
+        return false;
+    }
+    rows.push(cat);
+});`,
             ],
         },
         {
@@ -370,7 +395,7 @@ tables.cats.deleteById(3);`,
                     name: 'batchNotify',
                     optional: true,
                     type: `boolean`,
-                    description: 'passing false will rerender components for each deleted row',
+                    description: 'passing <span class="inline-code api-inline">false</span> will rerender components for each deleted row',
                 },
             ],
             returns: '<span class="inline-code api-inline">true</span> if a row was deleted and <span class="inline-code api-inline">false</span> if a row was not deleted',
@@ -433,7 +458,7 @@ tables.cats.onAfterDelete(cat => {
         {
             name: 'updateById()',
             description: `Update an existing row in the specified table. The user needs to know the <em>_id</em> of the row to be updated.`,
-            signature: `updateById(_id: number, setValue: Partial<T> | ((row: TableRow<T>) => Partial<T>)): TableRow<T> | undefined`,
+            signature: `updateById(_id: number, setValue: Partial<T> | ((row: TableRow<T>) => Partial<T>), render?: boolean): TableRow<T> | undefined`,
             parameters: [
                 {
                     name: '_id',
@@ -446,6 +471,12 @@ tables.cats.onAfterDelete(cat => {
                     optional: false,
                     type: `Partial<T> | ((row: TableRow<T>) => Partial<T>)`,
                     description: 'an object with values for each property to update, or a function that receives the row and returns an object with values for each property to update.',
+                },
+                {
+                    name: 'render',
+                    optional: true,
+                    type: `boolean`,
+                    description: 'default value is <span class="inline-code api-inline">true</span>. Passing <span class="inline-code api-inline">false</span> will update the data but not cause a rerender for any components',
                 },
             ],
             returns: 'The updated row, or <em>undefined</em> if the update could not be performed',
@@ -460,8 +491,8 @@ const row = tables.cats.updateById(10, cat => ({ age: cat.age++ }));`,
         },
         {
             name: 'updateMany()',
-            signature: `updateMany(setValue: Partial<T> | ((row: TableRow<T>) => Partial<T>), where?: Partial<T> | ((row: TableRow<T>) => boolean), batchNotify?: boolean): TableRow<T>[]`,
             description: `A function that will update all rows matching the object or function passed to the <span class="inline-code api-inline">where</span> parameter. If <span class="inline-code api-inline">where</span> is <span class="inline-code api-inline">undefined</span> or <span class="inline-code api-inline">null</span>, all rows in the table will be updated.`,
+            signature: `updateMany(setValue: Partial<T> | ((row: TableRow<T>) => Partial<T>), where?: Partial<T> | ((row: TableRow<T>) => boolean) | null, options?: object): TableRow<T>[]`,
             parameters: [
                 {
                     name: 'setValue',
@@ -472,14 +503,18 @@ const row = tables.cats.updateById(10, cat => ({ age: cat.age++ }));`,
                 {
                     name: 'where',
                     optional: true,
-                    type: `Partial<T> | ((row: TableRow<T>) => boolean`,
-                    description: `an object to match rows based on equality of each property value, or a function that returns <span class="inline-code api-inline">true</span> if the row should be updated and <span class="inline-code api-inline">false</span> if it should not be updated. Any attached triggers (e.g., <span class="inline-code api-inline">onDelete</span>) will be fired for each row. By default, components with a matching <span class="inline-code api-inline">use()</span> hook will only be rerendered after all rows are updated (batch). To override this behavior, pass <span class="inline-code api-inline">false</span> as the second argument, instructing Trigger to rerender components on each update, which is the same behavior as manually calling <span class="inline-code api-inline">updateRow()</span> multiple times. Components with a matching <span class="inline-code api-inline">useById()</span> hook will be rerendered immediately if the row they are subscribed to is updated. If <span class="inline-code api-inline">undefined</span> or <span class="inline-code api-inline">null</span>, all rows in the table will be updated.`,
+                    type: `Partial<T> | ((row: TableRow<T>) => boolean | null`,
+                    description: `an object to match rows based on equality of each property value, or a function that returns <span class="inline-code api-inline">true</span> if the row should be updated and <span class="inline-code api-inline">false</span> if it should not be updated. Any attached triggers (e.g., <span class="inline-code api-inline">onDelete</span>) will be fired for each row. If <span class="inline-code api-inline">undefined</span> or <span class="inline-code api-inline">null</span>, all rows in the table will be updated.`,
                 },
                 {
-                    name: 'batchNotify',
+                    name: 'options',
                     optional: true,
-                    type: `boolean`,
-                    description: 'passing false will rerender components as each row is updated',
+                    type: `object`,
+                    description: `
+<ul>
+    <li><span class="p-name">render <span class="p-optional">(optional) </span>(</span><code class="p-code">boolean</code><strong>)</strong>: default value is <span class="inline-code api-inline">true</span>. To override this behavior, pass <span class="inline-code api-inline">false</span>, instructing Trigger to update the values, but not rerender components.
+    <li><span class="p-name">batchNotify <span class="p-optional">(optional) </span>(</span><code class="p-code">boolean</code><strong>)</strong>: default value is <span class="inline-code api-inline">true</span>. Unless, <span class="inline-code api-inline">render</span> is set to <span class="inline-code api-inline">false</span>, components with a matching <span class="inline-code api-inline">useById()</span> hook will be rerendered after reach row is updated. Components with a matching <span class="inline-code api-inline">use()</span> hook will be rerendered after all rows are updated (batch). To override this behavior, pass <span class="inline-code api-inline">false</span>, instructing Trigger to rerender all components on each row update, which is the same behavior as manually calling <span class="inline-code api-inline">updateRow()</span> multiple times. Components with a matching <span class="inline-code api-inline">useById()</span> hook will be rerendered immediately if the row they are subscribed to is updated regardless of whether <span class="inline-code api-inline">batchNotify</span> is set to <span class="inline-code api-inline">true</span> or <span class="inline-code api-inline">false</span>.
+<ul>`
                 },
             ],
             returns: 'An array of rows that were updated',
@@ -546,7 +581,7 @@ tables.cats.onAfterUpdate((previousValue, newValue) => {
             description: `Returns the column names for the specified table (including the <em>_id</em> column)`,
             signature: `columnNames(): (keyof TableRow<T>)[]`,
             parameters: [],
-            returns: 'An array of column names for the specified table, sorted in alphabetical order',
+            returns: 'An array of column names for the specified table',
             examples: [
                 `// get column names for the cats table
 import { tables } from './store';

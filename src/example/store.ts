@@ -24,9 +24,9 @@ interface MyStore extends Store {
 
 const s: MyStore = {
     tables: {
-        taskOwners: CreateTable<TaskOwner>({ ownerID: [], firstName: [], lastName: [], }),
-        activeTasks: CreateTable<Task>({ ownerID: [], description: [], }),
-        completedTasks: CreateTable<Task>({ ownerID: [], description: [], }),
+        taskOwners: CreateTable<TaskOwner>(['ownerID', 'firstName', 'lastName']),
+        activeTasks: CreateTable<Task>(['ownerID', 'description']),
+        completedTasks: CreateTable<Task>(['ownerID', 'description']),
     },
     singles: {
         initialLoad: CreateSingle(true),
