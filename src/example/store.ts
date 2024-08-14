@@ -1,13 +1,14 @@
 import { extract, CreateTable, type Store, type Single, type Table, CreateSingle } from '@datahook/trigger';
+export type { TableRow } from '@datahook/trigger';
 
 type TaskOwner = {
-    ownerID: number;
+    ownerId: number;
     firstName: string;
     lastName: string;
-}
+};
 
-type Task = {
-    ownerID: number;
+export type Task = {
+    ownerId: number;
     description: string;
 };
 
@@ -20,13 +21,13 @@ interface MyStore extends Store {
     singles: {
         initialLoad: Single<boolean>;
     }
-}
+};
 
 const s: MyStore = {
     tables: {
-        taskOwners: CreateTable<TaskOwner>(['ownerID', 'firstName', 'lastName']),
-        activeTasks: CreateTable<Task>(['ownerID', 'description']),
-        completedTasks: CreateTable<Task>(['ownerID', 'description']),
+        taskOwners: CreateTable<TaskOwner>({ ownerId: [1, 2, 3, 4], firstName: ['Bill', 'Steve', 'Ada', 'Alan'], lastName: ['Gates', 'Jobs', 'Lovelace', 'Turing'] }),
+        activeTasks: CreateTable<Task>(['ownerId', 'description']),
+        completedTasks: CreateTable<Task>(['ownerId', 'description']),
     },
     singles: {
         initialLoad: CreateSingle(true),

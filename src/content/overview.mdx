@@ -16,7 +16,7 @@ relational database, which favor a flat structure. With **Trigger** you can main
 
 * keeping your data in a data-oriented flat structure (e.g., SoA) will make your application easier to develop as it grows in size and complexity
 * improved performance by only rendering components subscribing to specific tables/rows - no need to invalidate the entire store to make a small state change
-* the flexibility to create traditionally nested objects using the **single** data structure
+* the flexibility to store any object using the **single** data structure
 * triggers that facilitate side-effect interactions to localize logic
 * creating more than one store to localize state as needed
 * minimal changes to your existing code base - create your store, import it, and interact with it through regular React hooks
@@ -25,9 +25,10 @@ relational database, which favor a flat structure. With **Trigger** you can main
 
 **Trigger**'s core philosophies are:
 
-* Flat instead of nested data structures
+* Separation of data from code in your store
+* Preference for flat, basic structures that easily serialize
 * Relationships between data instead of embedding
-* Granular component updates instead of coarse (scorched earth) updates
+* Granular component updates instead of coarse updates
 * Simple integration with your store(s)
 * An enjoyable developer experience
 

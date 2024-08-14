@@ -8,28 +8,54 @@ import { StyledLink } from '../../components/Styles';
 
 Tables are the backbone of Trigger and offer unique experiences compared to other React state management libraries.
 
-To create tables in your store, you first declare the table type, where each property represents a column/attribute/feature in our table:
+To create tables in your store, you first declare the table type, where each property represents a column/attribute/feature in your table:
 
 <div className={codeWrapper}>
     ```typescript
     import { extract, CreateTable, type Store, type Table } from '@datahook/trigger';
 
     type TaskOwner = {
-        ownerID: number;
+        ownerID: number | null;
         firstName: string;
         lastName: string;
+        lastUpdated: Date;
+        isActive: boolean;
+        preferences: null | {
+            nickname: string;
+            email: string;
+        };
+        assignedTaskIDs: number[];
     }
     ```
 </div>
 
+In Trigger, the following **basic types** are supported:
 
-In Trigger, your tables must be "flat". This means table values can only be of the following types:
+* `string`
+* `number`
+* `Date`
+* `boolean`
+* `null`
 
-* string
-* number
-* Date
-* boolean
-* null
+
+Your tables are made up of **rows**. Each row can have columns (or attributes) that use any of the basic types listed above. Besides these basic types, your tables can also use:
+
+* `Arrays` (lists of the basic types)
+* `Objects` (collections that can hold any of the basic types)
+
+All types can be unioned with `null`
+
+The following types are not currently supported in a table. To use these types in Trigger, you use <Link to="/getting-started/working-with-singles"><StyledLink>Singles</StyledLink></Link> instead.
+
+* `undefined`
+* `Functions`
+* `Maps`
+* `Sets`
+* `WeakMaps`
+* `WeakSets`
+* `Classes`
+
+
 
 When you insert a row into a table, trigger will automatically handle assigning the <span class="inline-code">\_id</span>  value to your rows. If you need to store nested objects, you have two options:
 
