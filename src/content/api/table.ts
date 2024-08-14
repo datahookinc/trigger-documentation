@@ -622,6 +622,46 @@ import { tables } from './store';
 tables.cats.print({ name: "PJ" });`,
             ]
         },
+        {
+            name: 'toJSON()',
+            description: `Returns rows from specified table as JSON a string.`,
+            signature: `toJSON(index?: boolean, where?: Partial<T> | ((row: TableRow<T>) => boolean) | null, n?: number): string`,
+            parameters: [
+                {
+                    name: 'index',
+                    optional: true,
+                    type: `boolean`,
+                    description: `determines if the <span class="inline-code api-inline">_id</span> for each row should be printed (defaults to false)`,
+                },
+                {
+                    name: 'where',
+                    optional: true,
+                    type: `Partial<T> | ((row: TableRow<T>) => boolean`,
+                    description: `receives an object to match rows based on equality of each property value, or a function that returns <span class="inline-code api-inline">true</span> if the row should be returned and <span class="inline-code api-inline">false</span> if it should not be returned. If omitted, all rows will be returned from the table.`,
+                },
+                {
+                    name: 'n',
+                    optional: true,
+                    type: `number`,
+                    description: `the number of rows to be returned (defaults to 50). Passing -1 will return all rows based on browser limitations.`,
+                },
+            ],
+            returns: 'The table rows as a JSON string',
+            examples: [
+                `// return the first 50 rows from the cats table as a JSON string, and omit the _id
+import { tables } from './store';
+const jsonString = tables.cats.toJSON();`,
+                `// return the first 100 rows from the cats table as a JSON string, and omit the _id
+import { tables } from './store';
+const jsonString = tables.cats.toJSON(false, null, 100);`,
+                `// return all rows from the cats table as a JSON string where the age is greater than 7, and include the _id
+import { tables } from './store';
+const jsonString = tables.cats.toJSON(true, cat => cat.age > 7, -1);`,
+                `// return the first 50 rows from the cats table as a JSON string where the name is "PJ", and omit the _id
+import { tables } from './store';
+const jsonString = tables.cats.toJSON(false, { name: "PJ" });`,
+            ]
+        },
     ]
 }
 

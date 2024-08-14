@@ -52,7 +52,6 @@ export default function API() {
     const [selectedComponent, setSelectedComponent] = useState<AllowedSelection>(() =>{
         const selectedType = ["table", "single", "queue"];
         const idx = selectedType.indexOf(globalThis.location && globalThis.location.hash.replace("#", ""));
-        console.log(idx);
         return idx > -1 ? selectedType[idx] as AllowedSelection : 'table';
     });
     const d = data[selectedComponent];
