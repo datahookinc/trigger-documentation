@@ -631,7 +631,7 @@ tables.cats.print({ name: "PJ" });`,
                     name: 'index',
                     optional: true,
                     type: `boolean`,
-                    description: `determines if the <span class="inline-code api-inline">_id</span> for each row should be printed (defaults to false)`,
+                    description: `determines if the <span class="inline-code api-inline">_id</span> for each row should be included (defaults to false)`,
                 },
                 {
                     name: 'where',
