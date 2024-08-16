@@ -10,8 +10,7 @@ In this example, we will build a basic TODO app to highlight setting up your sto
 
 ### CREATE TYPES FOR OUR STORE
 
-First, we import the generic types from the library and then define the types we will use in our application. These types will provide many conveniences when interacting with your store throughout your application.
-Starting by creating a file for your store (e.g., **store.ts**) and adding the following types:
+Start by creating a file for your store (e.g., **store.ts**) and adding the following types:
 
 <span style={{ fontFamily: 'monospace'}}>store.ts</span>
 
@@ -34,12 +33,13 @@ Starting by creating a file for your store (e.g., **store.ts**) and adding the f
 
 <br />
 
-<mark>**Note:** We are using a <span class="inline-code">single</span> called <span class="inline-code">initialLoad</span> to ensure we don't load data into our store multiple times</mark>
-
 ### INSTANTIATE OUR STORE
 
-With our types declared, we now instantitate our store and export it for use throughout our application. You can do this in the same file where you declared your types. Start by importing the <span class="inline-code">CreateTable</span> and <span class="inline-code">CreateStore</span>
+With our types declared, we now instantitate our store and export it for use throughout our application. You can do this in the same file where you declared your types. Start by importing the <span class="inline-code">CreateSingle</span>, <span class="inline-code">CreateTable</span> and <span class="inline-code">CreateStore</span>
 convenience functions from the library.
+
+<mark>**Note:** We are using a <span class="inline-code">single</span> called <span class="inline-code">initialLoad</span> to ensure we don't load data into our store multiple times</mark>
+<br />
 
 <span style={{ fontFamily: 'monospace'}}>store.ts</span>
 
