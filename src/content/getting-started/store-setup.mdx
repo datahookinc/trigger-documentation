@@ -21,7 +21,7 @@ Here is an example store:
     }
 
     // create the store
-    const store = CreateStore({
+    export const store = CreateStore({
         person: CreateTable<Person>(['id', 'name', 'age']),
     });
     ```
