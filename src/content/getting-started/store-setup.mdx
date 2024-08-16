@@ -11,7 +11,7 @@ Here is an example store:
 
 <div className={codeWrapper}>
     ```typescript
-    import { extract, CreateTable, type Store, type Table } from '@datahook/trigger';
+    import { CreateTable, CreateStore } from '@datahook/trigger';
 
     // declare a table type
     type Person = {
@@ -20,37 +20,21 @@ Here is an example store:
         age: number;
     }
 
-    // declare the store type
-    interface MyStore extends Store {
-        tables: {
-            person: Table<Person>;
-        };
-    }
-
     // create the store
-    const s: MyStore = {
-        tables: {
-            person: CreateTable<Person>(['id', 'name', 'age']),
-        },
-    };
-
-    /*** EXTRACT AND EXPORT OUR STORE */
-    export const { tables } = extract(s);
+    const store = CreateStore({
+        person: CreateTable<Person>(['id', 'name', 'age']),
+    });
     ```
 </div>
 
-In the example above, half of the code is for declaring our table and store types. We first create a type called <span class="inline-code">Person</span> to represent a table in our store. We then declare our store by extending Trigger's default store.
+In the example above, half of the code is for declaring our table and store types. We first create a type called <span class="inline-code">Person</span> to represent a table in our store.
 
-Once we have a our types declared, we can then create our store, along with the initial values for our tables. In this example, the initial table is empty, which is why we pass empty arrays for each of our properties.
+Once we have a our types declared, we can then create our store, along with the initial values for our tables. In this example, the initial table is empty, which is why we pass just the column names.
 
-Finally, to use your store, we use Trigger's <span class="inline-code">extract</span> function, which pulls the <span class="inline-code">tables</span>, <span class="inline-code">singles</span>, and <span class="inline-code">queues</span> out of the table for exporting. Now, the tables in your store are namespaced and can be referenced as
-<span class="inline-code">_tables.person_</span> to provide a great developer experience.
-
-
-If our table had <span class="inline-code">singles</span> and <span class="inline-code">queues</span>, the store would look like this:
+If our table had <span class="inline-code">singles</span> and <span class="inline-code">queues</span>, the store would look something like this:
 <div className={codeWrapper}>
     ```typescript
-    import { extract, CreateSingle, CreateTable, CreateQueue, type Single, type Store, type Table, type Queue } from '@datahook/trigger';
+    import { CreateSingle, CreateTable, CreateQueue, CreateStore } from '@datahook/trigger';
 
     // declare a table type
     type Person = {
@@ -59,21 +43,34 @@ If our table had <span class="inline-code">singles</span> and <span class="inlin
         age: number;
     }
 
-    // declare the store type
-    interface MyStore extends Store {
-        tables: {
-            person: Table<Person>;
-        };
-        singles: {
-            activeTab: Single<number>;
-        }
-        queues: {
-            eventQueue: Queue<string>;
-        };
+    // create the store
+    export const store = CreateStore({
+        person: CreateTable<Person>(['id', 'name', 'age']),
+        activeTab: CreateSingle<number>(0),
+        eventQueue: CreateQueue<string>(),
+    });
+    ```
+</div>
+
+Notice how when we declare our store we use the <span class="inline-code">Table</span>, <span class="inline-code">Single</span>, and <span class="inline-code">Queue</span> types, and when we create our store we use the <span class="inline-code">CreateTable()</span>, <span class="inline-code">CreateSingle()</span>, and <span class="inline-code">CreateQueue()</span> functions.
+
+You can add as many tables, singles, and queues as you like to your store. It is common for singles to be used for UI type information (e.g., active tab) and for queues to be used for event processing - similar
+to how you would use a regular reducer function. This basic structure is how all of your stores will be setup, with most of the complexity coming from declaring your types.
+
+You can also create nested properties in your store for improved namespacing. For instance, our previous store could be declared as the following:
+<div className={codeWrapper}>
+    ```typescript
+    import { CreateSingle, CreateTable, CreateQueue, CreateStore } from '@datahook/trigger';
+
+    // declare a table type
+    type Person = {
+        id: number;
+        name: string;
+        age: number;
     }
 
     // create the store
-    const s: MyStore = {
+    const store = CreateStore({
         tables: {
             person: CreateTable<Person>(['id', 'name', 'age']),
         },
@@ -83,15 +80,10 @@ If our table had <span class="inline-code">singles</span> and <span class="inlin
         queues: {
             eventQueue: CreateQueue<string>(),
         }
-    };
+    });
 
-    /*** EXTRACT AND EXPORT OUR STORE */
-    export const { tables, singles, queues } = extract(s);
+    export { tables, singles, queues } = store;
     ```
 </div>
 
-Notice how when we declare our store we use the <span class="inline-code">Table</span>, <span class="inline-code">Single</span>, and <span class="inline-code">Queue</span> types, and when we create our store we use the <span class="inline-code">CreateTable()</span>, <span class="inline-code">CreateSingle()</span>, and <span class="inline-code">CreateQueue()</span> functions.
-
-You can add as many tables, singles, and queues as you like to your store. It is common for singles to be used for UI type information (e.g., active tab) and for queues to be used for event processing - similar
-to how you would use a regular reducer function. This basic structure is how all of your stores will be setup, with most of the complexity coming from declaring your types.
-
+Notice how we can now pull apart the tables, singles, and queues for clarity when importing the store into our components.

@@ -64,50 +64,33 @@ When you insert a row into a table, trigger will automatically handle assigning 
 
 Trigger will use our table types to improve the developer experience as you interact with your store.
 
-Once you have created your table type, you can add it to your store type under the <span class="inline-code">tables</span> property:
+You create your store with the types you have declared. When creating the table, you pass an array of column names for your table that match the keys in your type:
 
 <div className={codeWrapper}>
     ```typescript
-    interface MyStore extends Store {
-        tables: {
-            taskOwners: Table<TaskOwner>;
-        };
-    }
-    ```
-</div>
-
-Finally, you create your store with the types you have declared and export the table for use in your application. When creating the table, you pass an array of column names for your table that match the keys in your type:
-
-<div className={codeWrapper}>
-    ```typescript
-    const s: MyStore = {
-        tables: {
-            taskOwners: CreateTable<TaskOwner>(['ownerID', 'firstName', 'lastName']),
-        },
-    };
-
-    /*** EXTRACT AND EXPORT OUR STORE */
-    export const { tables } = extract(s);
+    export const store = CreateStore({
+        taskOwners: CreateTable<TaskOwner>(['ownerID', 'firstName', 'lastName']),
+    });
     ```
 </div>
 
 The <span class="inline-code">CreateTable</span> function provides the functionality Trigger uses to manage your table. A couple of points worth noting when calling <span class="inline-code">CreateTable</span>:
 
 * You must pass **all** properties for your table
-* You can pass empty arrays, or you can prepopulate the arrays with values
+* You can pass an object where each property is a column name and the value is an empty array, or you can prepopulate the arrays with values
 * If you prepopulate the arrays with values, all arrays must contain the same number of elements or Trigger will throw an error
 
 Declaring our table types and store types are important because they provide an improved developer experience across your application. To use your table in your application, 
-you simply import the **tables** value and use the namespaced table:
+you simply import the **store** value and use the namespaced table:
 
 <span style={{ fontFamily: 'monospace'}}>component.tsx</span>
 
 <div className={codeWrapper}>
     ```tsx
-    import { tables } from './store';
+    import { store } from './store';
 
     function MyComponent() {
-        const rows = tables.activeTasks.use();
+        const rows = store.activeTasks.use();
 
         return (
             <div>
@@ -139,18 +122,18 @@ a user-defined function, the function will receive each row in the table individ
 
 ```tsx
 // retrieve all rows from the table, and re-render it every time there is a change to the table
-const rows = tables.activeTasks.use();
+const rows = store.activeTasks.use();
 ```
 
 ```tsx
 // retrieve all rows from the table, and re-render it every time a row is inserted or deleted
-const rows = tables.activeTasks.use(null, ['onInsert', 'onDelete']);
+const rows = store.activeTasks.use(null, ['onInsert', 'onDelete']);
 ```
 
 ```tsx
 // retrieve only rows from the table where the "value" property is greater than 10,
 // and re-render it every time a row is inserted.
-const rows = tables.activeTasks.use(v => v.value > 10, ['onInsert']);
+const rows = store.activeTasks.use(v => v.value > 10, ['onInsert']);
 ```
 
 <mark>**Note**: Trigger will compare the current values in your component to the new values to determine if a re-render is required</mark>
@@ -165,13 +148,13 @@ then subscribe to that row's changes. The notify list for <span class="inline-co
 
 ```tsx
 // retrieve the row from the table whose "_id" property is 10
-const row = tables.activeTasks.useById(10);
+const row = store.activeTasks.useById(10);
 ```
 
 ```tsx
 // retrieve the row from the table whose "_id" property is 10,
 // and only re-render the component when the row is deleted
-const row = tables.activeTasks.useById(10, ['onDelete']);
+const row = store.activeTasks.useById(10, ['onDelete']);
 ```
 
 ## <span class="inline-code">find()</span>, <span class="inline-code">findOne()</span> and <span class="inline-code">findById()</span>
@@ -186,12 +169,12 @@ user-defined function that receives each entry in the table individually and the
 
 ```tsx
 // retrieve all rows in the table where the "firstName" property is set to "Ada"
-const rows = tables.activeTasks.find({ firstName: 'Ada' });
+const rows = store.activeTasks.find({ firstName: 'Ada' });
 ```
 
 ```tsx
 // retrive all rows in the table where the "ownerID" is greater than 10.
-const rows = tables.activeTasks.find(v => v.ownerID > 10);
+const rows = store.activeTasks.find(v => v.ownerID > 10);
 ```
 
 The <span class="inline-code">findOne()</span> method is the same as the <span class="inline-code">find()</span> method, except it will only return the first row that is found, or <span class="inline-code">undefined</span> if no row matches your <span class="inline-code">where</span> predicate. Omitting the <span class="inline-code">where</span> predicate will return the first row in the table.
@@ -200,12 +183,12 @@ The <span class="inline-code">findOne()</span> method is the same as the <span c
 
 ```tsx
 // retrieve the first row in the table where "firstName" property is set to "Ada"
-const row = tables.activeTasks.findOne({ firstName: 'Ada' });
+const row = store.activeTasks.findOne({ firstName: 'Ada' });
 ```
 
 ```tsx
 // retrieve the first row in the table where the "ownerID" is greater than 10.
-const row = tables.activeTasks.findOne(v => v.ownerID > 10);
+const row = store.activeTasks.findOne(v => v.ownerID > 10);
 ```
 
 The <span class="inline-code">findById()</span> method will return the row matching the provided <span class="inline-code">_id</span> predicate. Your <span class="inline-code">where</span> predicate can be an (<span class="inline-code">\_id</span>).
@@ -214,5 +197,5 @@ The <span class="inline-code">findById()</span> method will return the row match
 
 ```tsx
 // retrieve the row from the table whose "_id" property is 10
-const row = tables.activeTasks.findById(10);
+const row = store.activeTasks.findById(10);
 ```

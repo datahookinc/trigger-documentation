@@ -15,13 +15,11 @@ to see if we want to allow it or change it. For this, we would use the table's *
 
 <div className={codeWrapper}>
 ```typescript
-const s: MyStore = {
-    tables: {
-        customers: CreateTable<Customer>({ customerID: [], firstName: [], lastName: [] }),
-    },
-};
+export const store = CreateStore({
+    customers: CreateTable<Customer>({ customerID: [], firstName: [], lastName: [] }),
+});
 
-s.tables.customers.onBeforeInsert((v) => {
+store.customers.onBeforeInsert((v) => {
     if (v.firstName === 'OmitMe') {
         return false;
     }
@@ -41,13 +39,11 @@ Now, let's say we want to interrogate the values when a user attempts to update 
 
 <div className={codeWrapper}>
 ```typescript
-const s: MyStore = {
-    tables: {
-        customers: CreateTable<Customer>({ customerID: [], firstName: [], lastName: [] }),
-    },
-};
+export const store = CreateStore({
+    customers: CreateTable<Customer>({ customerID: [], firstName: [], lastName: [] }),
+});
 
-s.tables.customers.onBeforeUpdate((cv, nv) => {
+store.customers.onBeforeUpdate((cv, nv) => {
     if (cv.firstName === 'UpdateMe') {
         nv.firstName = 'Changed before update';
         return nv;
@@ -59,7 +55,7 @@ s.tables.customers.onBeforeUpdate((cv, nv) => {
 Notice how the <span class="inline-code">onBeforeUpdate()</span> trigger provides us with the current value (<span class="inline-code">cv</span>) and the pending new value (<span class="inline-code">nv</span>). This allows you to review the current value and determine if you want to access the proposed
 new values.
 
-A popular use case for triggers is to interact with data in other tables, singles, and queues in your store. Trigger requires your tables to be in a flat structure, which often leads to relationships between tables
+A popular use case for triggers is to interact with data in other tables, singles, and queues in your store. Trigger encourages your tables to be in a flat structure, which often leads to relationships between tables
 to create hiearchies and n-to-n relations. In this setup, you may want to create records in one table when you insert records in another table. In our example above, imagine if every time we create a new **customer** in our
 store we also want to create a new **orders** entry. This can be accomplished with the <span class="inline-code">onAfterInsert()</span> trigger along with an <span class="inline-code">insertRow()</span> action on the **orders** table. This use case was the inspiration for triggers so the
 user would not need to remember that a relationship exists between these two or more tables - they can declare it idiomatically with triggers when creating their store.
@@ -67,15 +63,13 @@ user would not need to remember that a relationship exists between these two or 
 
 <div className={codeWrapper}>
 ```typescript
-const s: MyStore = {
-    tables: {
-        customers: CreateTable<Customer>({ customerID: [], firstName: [], lastName: [] }),
-        orders: CreateTable<Order>({ orderID: [], customerID: [], orderLocation: [], orderDate: [] }),
-    },
-};
+export const store = CreateStore({
+    customers: CreateTable<Customer>({ customerID: [], firstName: [], lastName: [] }),
+    orders: CreateTable<Order>({ orderID: [], customerID: [], orderLocation: [], orderDate: [] }),
+});
 
-s.tables.customers.onAfterInsert(v => {
-    s.tables.orders.insertOne({ orderID: 100, customerID: v.customerID, orderDate: new Date(), orderLocation: '' });
+store.customers.onAfterInsert(v => {
+    store.orders.insertOne({ orderID: 100, customerID: v.customerID, orderDate: new Date(), orderLocation: '' });
 });
 ```
 </div>

@@ -16,39 +16,24 @@ To create a queue, use the <span class="inline-code">Queue\<T\></span> type decl
 
 <div className={codeWrapper}>
 ```typescript
-import { extract, CreateSingle, type Store, type Single } from '../src';
+import { CreateQueue, CreateStore } from '@datahook/trigger';
 
-interface MyStore extends Store {
-    queues: {
-        eventQueue: Queue<string>;
-    };
-}
+export const store = CreateStore({
+    eventQueue: CreateQueue<string>(),
+});
 ```
 </div>
 
-<div className={codeWrapper}>
-```typescript
-const s: MyStore = {
-    queues: {
-        eventQueue: CreateQueue<string>(),
-    },
-};
-
-/*** EXTRACT AND EXPORT OUR STORE */
-export const { queues } = extract(s);
-```
-</div>
-
-To use your <span class="inline-code">queue</span> in your application, you simply import the <span class="inline-code">queues</span> value and use the namespaced queue name:
+To use your <span class="inline-code">queue</span> in your application, you simply import the <span class="inline-code">store</span> and use the namespaced queue name:
 
 <span style={{ fontFamily: 'monospace'}}>component.tsx</span>
 
 <div className={codeWrapper}>
 ```tsx
-import { queues } from './store';
+import { store } from './store';
 
 function MyComponent() {
-    const event = queues.eventQueue.get();
+    const event = store.eventQueue.get();
 
     return (
         <div>
@@ -66,13 +51,13 @@ The <span class="inline-code">get()</span> method allows you to retrieve the val
 **Example of <span class="inline-code">get()</span>:**
 
 ```typescript
-const item = queues.eventQueue.get();
+const item = store.eventQueue.get();
 ```
 
 **Example of <span class="inline-code">insert()</span>:**
 
 ```typescript
-queues.eventQueue.insert('switchTabs');
+store.eventQueue.insert('switchTabs');
 ```
 
 The <span class="inline-code">insert()</span> method allows you to push a new item on to the queue. <span class="inline-code">insert()</span> returns <span class="inline-code">true</span> if the insert was successful and <span class="inline-code">false</span> if not. You can pass an optional callback function that will be called
@@ -87,8 +72,8 @@ to rerender and ingest the values in the queue. This is required because queues 
 
 <div className={codeWrapper}>
 ```typescript
-s.queues.eventQueue.onInsert(() => {
-    s.singles.pendingActions.set(true);
+store.eventQueue.onInsert(() => {
+    store.pendingActions.set(true);
 });
 ```
 </div>

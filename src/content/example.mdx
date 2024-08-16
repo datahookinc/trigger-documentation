@@ -17,8 +17,6 @@ Starting by creating a file for your store (e.g., **store.ts**) and adding the f
 
 <div className={codeWrapper}>
     ```typescript
-    import { type Store, type Single, type Table } from '@datahook/trigger';
-
     type TaskOwner = {
         ownerID: number;
         firstName: string;
@@ -28,17 +26,6 @@ Starting by creating a file for your store (e.g., **store.ts**) and adding the f
     export type Task = {
         ownerID: number;
         description: string;
-    };
-
-    interface MyStore extends Store {
-        tables: {
-            taskOwners: Table<TaskOwner>;
-            activeTasks: Table<Task>;
-            completedTasks: Table<Task>;
-        },
-        singles: {
-            initialLoad: Single<boolean>;
-        }
     };
     ```
 </div>
@@ -51,28 +38,21 @@ Starting by creating a file for your store (e.g., **store.ts**) and adding the f
 
 ### INSTANTIATE OUR STORE
 
-With our types declared, we now instantitate our store and export it for use throughout our application. You can do this in the same file where you declared your types. Start by importing the <span class="inline-code">CreateTable</span> and <span class="inline-code">extract</span>
-convenience functions from the library, then creating a property called <span class="inline-code">tables</span> in your store object with empty arrays to hold your data.
+With our types declared, we now instantitate our store and export it for use throughout our application. You can do this in the same file where you declared your types. Start by importing the <span class="inline-code">CreateTable</span> and <span class="inline-code">CreateStore</span>
+convenience functions from the library.
 
 <span style={{ fontFamily: 'monospace'}}>store.ts</span>
 
 <div className={codeWrapper}>
     ```typescript
-    import { extract, CreateTable, type Single, type Store, type Table } from '@datahook/trigger';
+    import { CreateSingle, CreateTable, CreateStore } from '@datahook/trigger';
 
-    const s: MyStore = {
-        tables: {
-            taskOwners: CreateTable<TaskOwner>({ ownerID: [1, 2, 3, 4], firstName: ['Bill', 'Steve', 'Ada', 'Alan'], lastName: ['Gates', 'Jobs', 'Lovelace', 'Turing'] }),
-            activeTasks: CreateTable<Task>(['ownerID', 'description']),
-            completedTasks: CreateTable<Task>(['ownerID', 'description']),
-        },
-        singles: {
-            initialLoad: CreateSingle(true),
-        }
-    };
-
-    /*** EXTRACT AND EXPORT OUR STORE */
-    export const { tables, singles } = extract(s);
+    export const store = CreateStore({
+        taskOwners: CreateTable<TaskOwner>({ ownerID: [1, 2, 3, 4], firstName: ['Bill', 'Steve', 'Ada', 'Alan'], lastName: ['Gates', 'Jobs', 'Lovelace', 'Turing'] }),
+        activeTasks: CreateTable<Task>(['ownerID', 'description']),
+        completedTasks: CreateTable<Task>(['ownerID', 'description']),
+        initialLoad: CreateSingle(true),
+    });
     ```
 </div>
 
@@ -82,7 +62,7 @@ The final version of our store is shown below, and is now ready for use in our a
 
 <div className={codeWrapper}>
     ```typescript
-    import { extract, CreateTable, type Store, type Single, type Table, CreateSingle } from '@datahook/trigger';
+    import { CreateSingle, CreateTable, CreateStore } from '@datahook/trigger';
     export type { TableRow } from '@datahook/trigger';
 
     type TaskOwner = {
@@ -96,30 +76,12 @@ The final version of our store is shown below, and is now ready for use in our a
         description: string;
     };
 
-    interface MyStore extends Store {
-        tables: {
-            taskOwners: Table<TaskOwner>;
-            activeTasks: Table<Task>;
-            completedTasks: Table<Task>;
-        },
-        singles: {
-            initialLoad: Single<boolean>;
-        }
-    };
-
-    const s: MyStore = {
-        tables: {
-            taskOwners: CreateTable<TaskOwner>({ ownerId: [1, 2, 3, 4], firstName: ['Bill', 'Steve', 'Ada', 'Alan'], lastName: ['Gates', 'Jobs', 'Lovelace', 'Turing'] }),
-            activeTasks: CreateTable<Task>(['ownerId', 'description']),
-            completedTasks: CreateTable<Task>(['ownerId', 'description']),
-        },
-        singles: {
-            initialLoad: CreateSingle(true),
-        }
-    };
-
-    /*** EXTRACT AND EXPORT OUR STORE */
-    export const { tables, singles } = extract(s);
+    export const store = CreateStore({
+        taskOwners: CreateTable<TaskOwner>({ ownerID: [1, 2, 3, 4], firstName: ['Bill', 'Steve', 'Ada', 'Alan'], lastName: ['Gates', 'Jobs', 'Lovelace', 'Turing'] }),
+        activeTasks: CreateTable<Task>(['ownerID', 'description']),
+        completedTasks: CreateTable<Task>(['ownerID', 'description']),
+        initialLoad: CreateSingle(true),
+    });
     ```
 </div>
 
@@ -133,17 +95,17 @@ The final version of our store is shown below, and is now ready for use in our a
 
 <div className={codeWrapper}>
     ```tsx
-    import { tables, singles } from './store';
+    import { store } from './store';
     import TaskOwners from './taskOwners';
     import ActiveTasks from './activeTasks';
     import CompletedTasks from './completedTasks';
 
     export default function App() {
-        const initialLoad = singles.initialLoad.get();
+        const initialLoad = store.initialLoad.get();
         useLayoutEffect(() => {
             if (initialLoad) {
-                singles.initialLoad.set(false);
-                tables.activeTasks.insertMany([
+                store.initialLoad.set(false);
+                store.activeTasks.insertMany([
                     {
                         ownerId: 1,
                         description: 'Invent Internet Explorer',
@@ -179,13 +141,13 @@ The final version of our store is shown below, and is now ready for use in our a
 
 <div className={codeWrapper}>
     ```tsx
-    import { tables } from './store';
+    import { store } from './store';
 
     // Will show how may active and completed tasks for each owner
     export default function TaskOwners() {
-        const activeTasks = tables.activeTasks.use(null, ['onDelete', 'onInsert']);
-        const completedTasks = tables.completedTasks.use(null, ['onDelete', 'onInsert']);
-        const owners = tables.taskOwners.use();
+        const activeTasks = store.activeTasks.use(null, ['onDelete', 'onInsert']);
+        const completedTasks = store.completedTasks.use(null, ['onDelete', 'onInsert']);
+        const owners = store.taskOwners.use();
 
         return (
             <div className={table}>
@@ -220,17 +182,17 @@ The final version of our store is shown below, and is now ready for use in our a
 
 <div className={codeWrapper}>
     ```tsx
-    import { Task, tables, TableRow } from './store';
+    import { store, type Task, type TableRow } from './store';
 
     // Will show the active tasks
     function ActiveTasks() {
-        const tasks = tables.activeTasks.use();
+        const tasks = store.activeTasks.use();
 
         const handleCompleteTask = (_id: number) => {
-            const task = tables.activeTasks.findById(_id);
+            const task = store.activeTasks.findById(_id);
             if (task) {
-                tables.activeTasks.deleteById(_id);
-                tables.completedTasks.insertOne({ ownerId: task.ownerId, description: task.description });
+                store.activeTasks.deleteById(_id);
+                store.completedTasks.insertOne({ ownerId: task.ownerId, description: task.description });
             }
         }
         return <TaskTable tasks={tasks} tooltip="Click to complete task" iconColour="success" title="Active Tasks" handleToggleTask={handleCompleteTask} />
@@ -238,13 +200,13 @@ The final version of our store is shown below, and is now ready for use in our a
 
     // Will show the completed tasks
     function CompletedTasks() {
-        const tasks = tables.completedTasks.use();
+        const tasks = store.completedTasks.use();
 
         const handleActivateTask = (_id: number) => {
-            const task = tables.completedTasks.findById(_id);
+            const task = store.completedTasks.findById(_id);
             if (task) {
-                tables.completedTasks.deleteById(_id);
-                tables.activeTasks.insertOne({ ownerId: task.ownerId, description: task.description });
+                store.completedTasks.deleteById(_id);
+                store.activeTasks.insertOne({ ownerId: task.ownerId, description: task.description });
             }
         }
         return <TaskTable tasks={tasks} tooltip="Click to activate task" iconColour="error" title="Completed Tasks" handleToggleTask={handleActivateTask} />
@@ -274,7 +236,7 @@ The final version of our store is shown below, and is now ready for use in our a
                         <tbody>
                             {tasks.map(t =>
                                 <tr key={t._id}>
-                                    <td>{tables.taskOwners.findOne({ ownerId: t.ownerId})!.firstName} {tables.taskOwners.findOne({ ownerId: t.ownerId})!.lastName}</td>
+                                    <td>{store.taskOwners.findOne({ ownerId: t.ownerId})!.firstName} {store.taskOwners.findOne({ ownerId: t.ownerId})!.lastName}</td>
                                     <td>{t.description}</td>
                                     <td className={icon} title={tooltip} onClick={() => handleToggleTask(t._id)}>
                                         {iconColour === 'success' 

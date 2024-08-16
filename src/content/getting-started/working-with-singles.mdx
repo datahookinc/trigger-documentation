@@ -16,7 +16,7 @@ To create a single, use the <span class="inline-code">Single\<T\></span> type de
 
 <div className={codeWrapper}>
 ```typescript
-import { extract, CreateSingle, type Store, type Single } from '../src';
+import { CreateSingle, CreateStore } from '@datahook/trigger';
 
 type Person = {
     id: number;
@@ -24,32 +24,14 @@ type Person = {
     age: number;
 }
 
-interface MyStore extends Store {
-    singles: {
-        activeUser: Single<Person>;
-        pendingActions: Single<boolean>;
-    }
-}
+export const store = CreateStore({
+    activeUser: CreateSingle({ id: 0, name: 'Ada', age: 36 }),
+    pendingActions: CreateSingle(false),
+});
 ```
 </div>
 
 Notice above how **activeUser** is a an object, while **pendingActions** is a primitive value. <span class="inline-code">Singles</span> will allow you to manage nested, hierarhical objects as needed.
-
-With our types declared, we can now instantiate our store with our Singles and extract them for use in our application:
-
-<div className={codeWrapper}>
-```typescript
-const s: MyStore = {
-    singles: {
-        activeUser: CreateSingle({ id: 0, name: 'Ada', age: 36 }),
-        pendingActions: CreateSingle(false),
-    }
-};
-
-/*** EXTRACT AND EXPORT OUR STORE */
-export const { singles } = extract(s);
-```
-</div>
 
 To use your single in your application, you simply import the <span class="inline-code">singles</span> value and use the namespaced single name:
 
@@ -57,10 +39,10 @@ To use your single in your application, you simply import the <span class="inlin
 
 <div className={codeWrapper}>
 ```tsx
-import { singles } from './store';
+import { store } from './store';
 
 function MyComponent() {
-    const user = singles.activeUser.use();
+    const user = store.activeUser.use();
 
     return (
         <div>
@@ -82,14 +64,14 @@ The <span class="inline-code">use()</span> method will cause your component rere
 ```typescript
 // retrieve the current value stored in `activeUser` and
 // rerender the component whenever this value changes
-const currentValue = singles.activeUser.use();
+const currentValue = store.activeUser.use();
 ```
 
 **Example of <span class="inline-code">set()</span>:**
 
 ```typescript
 // set the `activeUser` with a new value for the "name" property
-singles.activeUser.set({ ...currentValue, name: 'New Name' })
+store.activeUser.set({ ...currentValue, name: 'New Name' })
 ```
 
 To change the value in your <span class="inline-code">singles</span>, you call the <span class="inline-code">set()</span> method with the new value. Trigger uses equality comparisons (===) to determine if the underlying value has changed. So, if your underlying value is an
@@ -99,7 +81,7 @@ object (like an array) you should call <span class="inline-code">set</span> with
 
 ```typescript
 // set the `activeUser` with a new value for the "name" property
-singles.activeUser.setFn(cv => ({ ...cv, name: 'New Name' }))
+store.activeUser.setFn(cv => ({ ...cv, name: 'New Name' }))
 ```
 
 To change the value of your <span class="inline-code">single</span> based on its existing value, you call the <span class="inline-code">setFn()</span> method. This method allows you to pass a function that receives the current value and returns the new value. This ensures there is
@@ -113,5 +95,5 @@ The <span class="inline-code">get()</span> method is similar to the <span class=
 
 ```typescript
 // get the current value without causing a rerender
-const currentValue = singles.activeUser.get();
+const currentValue = store.activeUser.get();
 ```

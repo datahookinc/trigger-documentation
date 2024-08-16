@@ -19,7 +19,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@datahook/trigger": "^0.19.0",
+    "@datahook/trigger": "^0.20.0",
     "@emotion/react": "11.11.0",
     "@emotion/styled": "11.11.0",
     "@mdx-js/react": "2.3.0",

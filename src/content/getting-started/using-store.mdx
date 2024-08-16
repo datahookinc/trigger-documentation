@@ -2,16 +2,16 @@ import { codeWrapper } from '../../example/example.module.css';
 
 # Using your store
 
-Once your store is created, and you have extracted your tables, singles, and queues, you can import them into your components for interaction.
+Once your store is created, you can import it into your components for interaction.
 
 <span style={{ fontFamily: 'monospace'}}>component.tsx</span>
 
 <div className={codeWrapper}>
 ```tsx
-import { tables } from './store';
+import { store } from './store';
 
 function MyComponent() {
-    const rows = tables.activeTasks.use();
+    const rows = store.activeTasks.use();
 
     return (
         <div>
@@ -22,7 +22,7 @@ function MyComponent() {
 ```
 </div>
 
-Trigger uses React hooks internally, which makes it easy to integrate the store into your application. In the above example, we simply need to import the <span class="inline-code">tables</span> property from our store which
+Trigger uses React hooks internally, which makes it easy to integrate the store into your application. In the above example, we simply need to import the <span class="inline-code">store</span> which
 has all of our tables namespaced and ready to use. When using TypeScript you will also be provided with type hints about the properties your table contains.
 
 The same table can be used in multiple components, which allows you to control which components need to update when there is a change to the underlying table.
