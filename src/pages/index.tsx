@@ -1,19 +1,21 @@
-import React from 'react';
-import { Navigation } from '../components/navigation';
-import { ContentWrapper } from '../components/contentWrapper';
-import Layout from '../components/layout';
-import MDX from '../content/overview.mdx';
-import SEO from '../components/seo';
+import React from "react";
+import { Navigation } from "../components/navigation";
+import { ContentWrapper } from "../components/contentWrapper";
+import Layout from "../components/layout";
+import MDX from "../content/welcome.mdx";
+import SEO from "../components/seo";
 
-export default function Overview() {
+export default function Welcome() {
     return (
         <Layout>
             <Navigation />
             <ContentWrapper>
-                <MDX />
+                <div style={{ display: "flex", flexDirection: "column" }}>
+                    <MDX />
+                </div>
             </ContentWrapper>
         </Layout>
-    )
+    );
 }
 
-export const Head = () => <SEO title="Overview" />
+export const Head = () => <SEO title="Welcome" />;

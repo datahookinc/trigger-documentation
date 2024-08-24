@@ -624,7 +624,7 @@ tables.cats.print({ name: "PJ" });`,
         },
         {
             name: 'toJSON()',
-            description: `Returns rows from specified table as JSON a string.`,
+            description: `Returns rows from specified table as a JSON string.`,
             signature: `toJSON(index?: boolean, where?: Partial<T> | ((row: TableRow<T>) => boolean) | null, n?: number): string`,
             parameters: [
                 {

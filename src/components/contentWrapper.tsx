@@ -17,6 +17,7 @@ const StyledContentWrapper = styled.section`
         max-width: 1200px;
         margin-left: auto;
         margin-right: auto;
+        padding-top: 14px;
         
         .instructions-main {
             display: flex;
@@ -26,6 +27,7 @@ const StyledContentWrapper = styled.section`
         @media only screen and (max-width: 800px) {
             padding-bottom: 60px;
             padding-right: 20px;
+            padding-top: 0px;
         }
     }
 

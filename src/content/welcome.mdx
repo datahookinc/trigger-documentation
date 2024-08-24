@@ -1,0 +1,60 @@
+import { codeWrapper } from '../example/example.module.css';
+
+# Welcome to **Trigger**!
+
+**Trigger** is a <u>data-oriented</u> state management library developed for React and TypeScript. **Trigger** is lightweight, with
+0 dependencies, and is designed to optimize the developer experience for working with data in your application.
+
+```bash
+npm i @datahook/trigger
+```
+
+**Trigger** borrows philosophies and design patterns from database management (e.g., INSERT / UPDATE / DELETE, triggers, transactions, etc.) and spreadsheets; however, it also
+borrows design patterns from other popular React state management systems to maximize your productivity.
+
+## Step 1: Create a store in a regular .ts file
+
+<span style={{ fontFamily: 'monospace'}}>store.ts</span>
+
+<div className={codeWrapper}>
+    ```typescript
+    import { CreateTable, CreateStore } from '@datahook/trigger';
+
+    // declare a table type
+    type Person = {
+        id: number;
+        name: string;
+        age: number;
+    }
+
+    // create the store
+    export const store = CreateStore({
+        person: CreateTable<Person>(['id', 'name', 'age']),
+    });
+    ```
+</div>
+
+## Step 2: Use your store in your components
+
+<span style={{ fontFamily: 'monospace'}}>component.tsx</span>
+
+<div className={codeWrapper}>
+```tsx
+import { store } from './store';
+
+function MyComponent() {
+    const rows = store.activeTasks.use();
+
+    return (
+        <div>
+            There are {rows.length} active tasks in the table
+        </div>
+    )
+}
+```
+</div>
+
+Trigger uses React hooks internally, which makes it easy to integrate the store into your application. In the above example, we simply need to import the <span class="inline-code">store</span> which
+has all of our tables namespaced and ready to use. When using TypeScript, you will also receive type hints about the properties your table contains, if your IDE supports it.
+
+The same table can be used in multiple components, which allows you to control which components need to update when there is a change to the underlying table.

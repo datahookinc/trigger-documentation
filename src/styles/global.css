@@ -29,6 +29,10 @@ mark {
     background-color: lightyellow;
 }
 
+h1 {
+    line-height: 36px;
+}
+
 
 .inline-code-background {
     padding: 0.2em 0.4em;

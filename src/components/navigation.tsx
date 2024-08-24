@@ -73,9 +73,11 @@ export function Navigation() {
             <a className="no-link" href="/"><h1>TRIGGER <sup>v0.20 <img src="/lightning.png" /></sup></h1></a>
             <nav>
                 <ul>
-                    <li><Link to="/">Overview</Link></li>
+                    <li><Link to="/">Welcome</Link></li>
+                    <li><Link to="/about">About</Link></li>
                     <li><Link to="/installation">Installation</Link></li>
                     <li><Link to="/example">Example</Link></li>
+                    <li><Link to="/api">API</Link></li>
                     <li>
                         <Link to="/getting-started">Getting Started</Link>
                         <ul>
@@ -87,7 +89,6 @@ export function Navigation() {
                             <li><Link to="/getting-started/working-with-triggers">Working with Triggers</Link></li>
                         </ul>
                     </li>
-                    <li><Link to="/api">API</Link></li>
                     <li><a href="https://github.com/datahookinc/trigger" target="_blank" rel="noopener noreferrer">Github</a></li>
                     <li><a href="https://www.npmjs.com/package/@datahook/trigger" target="_blank" rel="noopener noreferrer">npm</a></li>
                 </ul>
