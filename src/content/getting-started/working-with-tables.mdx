@@ -45,7 +45,7 @@ Your tables are made up of **rows**. Each row can have columns (or attributes) t
 
 All types can be unioned with `null`
 
-The following types are not currently supported in a table. To use these types in Trigger, you use<Link to="/getting-started/working-with-singles"><StyledLink>Singles</StyledLink></Link> instead.
+The following types are not currently supported in a table. To use these types in Trigger, you use<Link to="/getting-started/working-with-singles"><StyledLink>Singles</StyledLink></Link>instead.
 
 * `undefined`
 * `Functions`
@@ -104,14 +104,14 @@ you simply import the **store** value and use the namespaced table:
 Behind the scenes, Trigger will assign a unique, sequential <span class="inline-code">\_id</span> column to each of your tables. This property is accessed as <span class="inline-code">\_id</span> and provides many conveniences for the internal functions of Trigger, and can
 be used in your application to uniquely identify each row. For instance, the <span class="inline-code">\_id</span> property is a great candidate for the **key** property when creating lists in React.
 
-## <span class="inline-code">use()</span> and <span class="inline-code">useById()</span>
+## <span class="inline-code">use()</span>, <span class="inline-code">useOne()</span>, and <span class="inline-code">useById()</span>
 
 <mark>**Note**: methods starting with <span class="inline-code">use</span> will cause your component to rerender. No other method will cause your component to rerender.</mark>
 
-With tables, the <span class="inline-code">use</span> and <span class="inline-code">useById</span> methods are how you can update your component when changes occur to the table.
+With tables, the <span class="inline-code">use()</span>, <span class="inline-code">useOne()</span>, and <span class="inline-code">useById()</span> methods are how you can update your component when changes occur to the table.
 
-The <span class="inline-code">use</span> method will return an array of rows matching you <span class="inline-code">where</span> predicate and your <span class="inline-code">notify</span> list. If your <span class="inline-code">where</span> predicate is set to <span class="inline-code">null</span>, it means you would like to receive all rows in the table. If your <span class="inline-code">where</span> predicate is
-a user-defined function, the function will receive each row in the table individually and the user must return a boolean to determine if the row should be retrieved. The notify list for <span class="inline-code">use</span> can accept 
+The <span class="inline-code">use()</span> method will return an array of rows matching you <span class="inline-code">where</span> predicate and your <span class="inline-code">notify</span> list. If your <span class="inline-code">where</span> predicate is set to <span class="inline-code">null</span>, it means you would like to receive all rows in the table. If your <span class="inline-code">where</span> predicate is
+a user-defined function, the function will receive each row in the table individually and the user must return a boolean to determine if the row should be retrieved. The notify list for <span class="inline-code">use()</span> can accept 
 <span class="inline-code">insert</span>, <span class="inline-code">update</span>, and <span class="inline-code">delete</span>.
 
 * <span class="inline-code">insert</span>: any time a new row is inserted in the table, re-render this component
@@ -138,8 +138,8 @@ const rows = store.activeTasks.use(v => v.value > 10, ['onInsert']);
 
 <mark>**Note**: Trigger will compare the current values in your component to the new values to determine if a re-render is required</mark>
 
-The <span class="inline-code">useById</span> method will return a single row or **undefined** for any row that matches the <span class="inline-code">\_id</span>. In practice, <span class="inline-code">use</span> and <span class="inline-code">useById</span> are often used in tandem, where are parent component will pass the <span class="inline-code">\_id</span> to child components who
-then subscribe to that row's changes. The notify list for <span class="inline-code">use</span> can accept <span class="inline-code">onUpdate</span>, and <span class="inline-code">onDelete</span>.
+The <span class="inline-code">useById()</span> method will return a single row or **undefined** for any row that matches the <span class="inline-code">\_id</span>. In practice, <span class="inline-code">use()</span> and <span class="inline-code">useById()</span> are often used in tandem, where a parent component will pass the <span class="inline-code">\_id</span> to child components who
+then subscribe to that row's changes. The notify list for <span class="inline-code">useById()</span> can accept <span class="inline-code">onUpdate</span> and <span class="inline-code">onDelete</span>.
 
 * <span class="inline-code">onUpdate</span>: if the row is updated, re-render the component
 * <span class="inline-code">onDelete</span>: if the row is deleted from the table, re-render the component
@@ -155,6 +155,24 @@ const row = store.activeTasks.useById(10);
 // retrieve the row from the table whose "_id" property is 10,
 // and only re-render the component when the row is deleted
 const row = store.activeTasks.useById(10, ['onDelete']);
+```
+
+The <span class="inline-code">useOne()</span> method is the same as the <span class="inline-code">use()</span> method, except it will only return the first row that is found, or <span class="inline-code">undefined</span> if no row matches your <span class="inline-code">where</span> predicate. Omitting the <span class="inline-code">where</span> predicate will return the first row in the table.The notify list for <span class="inline-code">useOne()</span> can accept <span class="inline-code">onUpdate</span> and <span class="inline-code">onDelete</span>.
+
+* <span class="inline-code">onUpdate</span>: if the row is updated, re-render the component
+* <span class="inline-code">onDelete</span>: if the row is deleted from the table, re-render the component
+
+**Examples of <span class="inline-code">useOne()</span>:**
+
+```tsx
+// retrieve the row from the table whose firstName property is "Ada"
+const row = store.activeTasks.useOne({ firstName: 'Ada'});
+```
+
+```tsx
+// retrieve the row from the table whose firstName property is "Ada"
+// and only re-render the component when the row is deleted
+const row = store.activeTasks.useOne({ firstName: 'Ada' }, ['onDelete']);
 ```
 
 ## <span class="inline-code">find()</span>, <span class="inline-code">findOne()</span> and <span class="inline-code">findById()</span>
@@ -191,7 +209,7 @@ const row = store.activeTasks.findOne({ firstName: 'Ada' });
 const row = store.activeTasks.findOne(v => v.ownerID > 10);
 ```
 
-The <span class="inline-code">findById()</span> method will return the row matching the provided <span class="inline-code">_id</span> predicate. Your <span class="inline-code">where</span> predicate can be an (<span class="inline-code">\_id</span>).
+The <span class="inline-code">findById()</span> method will return the row matching the provided <span class="inline-code">_id</span> predicate.
 
 **Examples of <span class="inline-code">findById()</span>:**
 
