@@ -65,6 +65,34 @@ const row = tables.cats.useById(10, ['onUpdate']);`,
             ],
         },
         {
+            name: 'useOne()',
+            description: `Retrieves the first matching row from the specified table and rerenders your component. If the where clause is omitted or set to <span class="inline-code api-inline">null</span>, then the first row in the table will be returned. If notify is ommitted, the component will rerender for all events on the specified row. Supported notify events are: <span class="inline-code api-inline">'onUpdate' | 'onDelete'</span>.`,
+            signature: `useOne(where?: Partial<T> | ((row: TableRow<T>) => boolean) | null, notify?: TableNotify[]): TableRow<T> | undefined;`,
+            parameters: [
+                {
+                    name: 'where',
+                    optional: true,
+                    type: `Partial<T> | ((row: TableRow<T>) => boolean`,
+                    description: `receives an object to match rows based on equality of each property value, or a function that returns <span class="inline-code api-inline">true</span> if the row should be returned and <span class="inline-code api-inline">false</span> if it should not be returned. If omitted, the first row is returned from the table.`,
+                },
+                {
+                    name: 'notify',
+                    optional: true,
+                    type: `['onUpdate' | 'onDelete']`,
+                    description: 'allows the user to specify which row events will cause the component to rerender. If omitted, the component will rerender whenever the row is updated or deleted.',
+                }
+            ],
+            returns: 'The first matching row, or undefined if no matching row is found.',
+            examples: [
+                `// returns the first row where the name is "PJ"
+import { tables } from './store';
+const row = tables.cats.useOne({ name: 'PJ' })`,
+                `// returns the first row where the age is greater than 7
+import { tables } from './store';
+const row = tables.cats.useOne(cat => cat.age > 7)`,
+            ],
+        },
+        {
             name: 'useLoadData()',
             description: `Receives a query function and loads the data into the specified table, returning the data, status, and any error messages.`,
             signature: `useLoadData(queryFn: () => Promise<T[]> | undefined, options?: object): { data: TableRow<T>[]; status: FetchStatus; error: string | null };`,
@@ -487,6 +515,40 @@ const row = tables.cats.updateById(10, { name: 'Pickles' });`,
                 `// increment the age of the cat with _id entry of 10
 import { tables } from './store';
 const row = tables.cats.updateById(10, cat => ({ age: cat.age++ }));`,
+            ],
+        },
+        {
+            name: 'updateOne()',
+            description: `Update an existing row in the specified table. The user needs to know the <em>_id</em> of the row to be updated.`,
+            signature: `updateOne(where: Partial<T> | ((row: TableRow<T>) => boolean) | null, setValue: Partial<T> | ((row: TableRow<T>) => Partial<T>), render?: boolean): TableRow<T> | undefined`,
+            parameters: [
+                {
+                    name: 'where',
+                    optional: true,
+                    type: `Partial<T> | ((row: TableRow<T>) => boolean | null`,
+                    description: `an object to match rows based on equality of each property value, or a function that returns <span class="inline-code api-inline">true</span> if the row should be updated and <span class="inline-code api-inline">false</span> if it should not be updated. Any attached triggers (e.g., <span class="inline-code api-inline">onDelete</span>) will be fired when the row is updated. If <span class="inline-code api-inline">null</span>, the first row in the table will be updated.`,
+                },
+                {
+                    name: 'setValue',
+                    optional: false,
+                    type: `Partial<T> | ((row: TableRow<T>) => Partial<T>)`,
+                    description: 'an object with values for each property to update, or a function that receives the row and returns an object with values for each property to update.',
+                },
+                {
+                    name: 'render',
+                    optional: true,
+                    type: `boolean`,
+                    description: 'default value is <span class="inline-code api-inline">true</span>. Passing <span class="inline-code api-inline">false</span> will update the data but not cause a rerender for any components',
+                },
+            ],
+            returns: 'The updated row, or <em>undefined</em> if the update could not be performed',
+            examples: [
+                `// change the name from "Pickles" to "PJ"
+import { tables } from './store';
+const row = tables.cats.updateOne({ name: 'Pickles' }, { name: 'PJ' });`,
+                `// increment the age of the cat named "PJ"
+import { tables } from './store';
+const row = tables.cats.updateOne({ name: 'PJ' }, cat => ({ age: cat.age++ }));`,
             ],
         },
         {
